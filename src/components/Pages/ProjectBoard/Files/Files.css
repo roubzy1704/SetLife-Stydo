@@ -1,0 +1,8 @@
+.display {
+	padding: 50px;
+	max-width: 90%;
+	margin: 40px auto;
+	background: #f4eaea;
+	border: 1px solid #afaaad;
+	box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+}

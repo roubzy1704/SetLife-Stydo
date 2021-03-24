@@ -1,0 +1,36 @@
+.form-design input {
+	height: 44px;
+}
+
+.form-design input,
+.form-design textarea {
+	width: 100%;
+	border: 1px solid #ccc;
+	background: #ffffff;
+	padding: 0.25rem 2rem;
+	box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.form-design input:focus,
+.form-design textarea:focus {
+	outline: none;
+	border: 1px solid orange;
+	box-shadow: 0 0 3px orange;
+}
+
+.form-design--invalid label,
+.form-design--invalid p {
+	color: red;
+}
+
+.form-design--invalid input,
+.form-design--invalid textarea {
+	border-color: rgba(185, 19, 19, 0.856);
+	background: #f8dada;
+}
+
+.error {
+	text-align: center;
+	text-transform: uppercase;
+	color: red;
+}

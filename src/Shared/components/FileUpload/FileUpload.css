@@ -1,0 +1,107 @@
+.dragdrop {
+	font-style: normal;
+	width: 55%;
+	padding: 20px 0px;
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+	/* border: 1px dashed #4aa1f3; */
+}
+
+.dragDropImg {
+	padding-bottom: 20px;
+	max-width: 90%;
+	max-height: 90%;
+}
+
+.or {
+	margin: 15px 0px;
+	font-size: 1.3rem;
+}
+
+.file-btn {
+	font-style: normal;
+}
+
+.file-display-container {
+	/* position: fixed; */
+	width: 70%;
+}
+
+.file-status-bar {
+	width: 100%;
+	vertical-align: top;
+	margin: 10px 0px;
+	position: relative;
+	/* display: inline-block; */
+	line-height: 50px;
+	height: 50px;
+	border: 1px solid rgb(219, 218, 216);
+	background-color: white;
+	overflow: hidden;
+}
+
+.file-status-bar > div {
+	overflow: hidden;
+}
+
+.file-type {
+	display: inline-block !important;
+	/* position: relative; */
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 13px;
+	padding: 1px 4px;
+	border-radius: 2px;
+	box-shadow: 1px 1px 2px #abc;
+	color: #fff;
+	background: #0080c8;
+	text-transform: uppercase;
+}
+
+.file-name {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 30px;
+	color: #4aa1f3;
+}
+
+.file-error {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 30px;
+	color: red;
+}
+
+.file-error-message {
+	color: #e65454;
+}
+
+/* .file-type-logo {
+	width: 50px;
+	height: 50px;
+	background: url(../../../Images/files.png) no-repeat center center;
+	background-size: 100%;
+	position: absolute;
+} */
+
+.file-size {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	margin-right: 5px;
+	margin-left: 10px;
+	color: #444242;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.file-remove {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	line-height: 15px;
+	cursor: pointer;
+}
+
+.unsupported h5 {
+	color: red;
+}

@@ -1,0 +1,33 @@
+.wrapper {
+	position: relative;
+	width: 90vw;
+	height: 90vh;
+	/* border: 1px solid black; */
+	padding-top: 10%;
+}
+
+.blue-box {
+	position: relative;
+	background-color: #84cee5;
+	width: 90%;
+	height: 80%;
+	/* height: 70vh; */
+	/* margin: 0 auto; */
+
+	/* width: auto; */
+}
+
+.auth-form {
+	position: absolute;
+	background-color: #f4eaea;
+	width: 40%;
+	height: 120%;
+	/* top: -10%; */
+	bottom: -10%;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	text-align: center;
+	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}

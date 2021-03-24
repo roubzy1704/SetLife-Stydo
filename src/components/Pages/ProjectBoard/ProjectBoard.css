@@ -1,0 +1,36 @@
+.moodTitle {
+	font-family: "Russo One", "Sahar", sans-serif;
+	font-weight: 900;
+	font-size: 36px;
+}
+
+.projectBoardLine {
+	width: 60%;
+}
+
+/* .borde {
+	border: 1px solid black;
+} */
+
+.projectBoardEntry {
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	text-align: left;
+	letter-spacing: 2px;
+	/* line-height: 40px; */
+	vertical-align: middle;
+}
+
+.projectBoardEntryText {
+	padding-top: 5px;
+}
+
+.boardEntry {
+	margin: 20px 0px;
+}
+
+.boardEntry:hover {
+	cursor: pointer;
+}

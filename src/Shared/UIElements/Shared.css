@@ -1,0 +1,74 @@
+.center {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.left {
+	float: left !important;
+	text-align: left;
+}
+
+.right {
+	float: right !important;
+	text-align: right;
+}
+
+.salmon {
+	background-color: #f4eaea;
+}
+
+.border {
+	border: 1px solid #afaaad;
+}
+
+.insertBoxShadow {
+	box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.drop {
+	padding-top: 10%;
+}
+
+.newProjectPageHeader {
+	font-family: "Archivo Black", sans-serif;
+}
+
+.sahar {
+	font-family: "Russo One", "Sahar", sans-serif;
+}
+
+.proxima {
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+}
+
+.textFont {
+	font-family: "Roboto", sans-serif;
+}
+
+.icon {
+	position: relative;
+	bottom: 8px;
+}
+
+.pageNav {
+	font-size: 16px;
+	font-weight: bold;
+	text-align: left;
+	padding-bottom: 25px;
+}
+
+.projectTitle {
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	font-style: normal;
+	font-weight: 900;
+	font-size: 36px;
+	text-transform: uppercase;
+}
+.boardTitle {
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	font-style: normal;
+	font-weight: 900;
+	font-size: 26px;
+	text-transform: uppercase;
+	padding-bottom: 40px;
+}

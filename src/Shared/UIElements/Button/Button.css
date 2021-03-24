@@ -1,0 +1,48 @@
+.blue-button {
+	background: #84cee5;
+	border-radius: 15px;
+	font-family: "Sahar", sans-serif;
+	font-style: italic;
+	font-weight: 900;
+	font-size: 20px;
+	line-height: 24px;
+	padding: 12px 30px;
+	border: none;
+	margin: 5px 10px;
+	color: black;
+}
+.blue-button-link {
+	color: black;
+}
+
+.blue-button-link:hover {
+	text-decoration: none;
+	color: black;
+}
+
+.blue-button:focus {
+	outline: none;
+}
+
+.blue-button:active,
+.blue-button:hover {
+	background: #4ebcdd;
+}
+
+.blue-button:disabled,
+.blue-button:hover:disabled,
+.blue-button:active:disabled {
+	background: #ccc;
+	color: #979797;
+	border-color: #ccc;
+	cursor: not-allowed;
+}
+
+.none {
+	color: black;
+}
+
+.none:hover {
+	text-decoration: none;
+	color: #4ebcdd;
+}

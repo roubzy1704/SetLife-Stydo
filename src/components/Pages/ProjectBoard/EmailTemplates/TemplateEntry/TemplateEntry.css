@@ -1,0 +1,58 @@
+.templateEntries {
+	margin-bottom: 30px;
+}
+
+.templateTitle {
+	/* background: #f1e7e7; */
+	background-color: #f1e7e7;
+	/* width: 822px;
+	height: 75px; */
+	/* display: block; */
+	width: 100%;
+	margin-left: 70px;
+	/* border: 1px solid black; */
+	text-align: left;
+	height: 100%;
+}
+.title {
+	position: absolute;
+	top: 25%;
+	padding-left: 10px;
+	text-transform: uppercase;
+}
+
+/* Customize the label (the radioBtnGrp) */
+.radioBtnGrp {
+	display: block;
+	position: relative;
+	cursor: pointer;
+}
+
+/* Hide the browser's default radio button */
+.radioBtnGrp input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+	position: absolute;
+	height: 35px;
+	width: 35px;
+	background-color: #eee;
+	border-radius: 50%;
+	border: 1px solid #afaaad;
+}
+
+/* On mouse-over, add a grey background color */
+.radioBtnGrp:hover input ~ .checkmark {
+	background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.radioBtnGrp input:checked ~ .checkmark {
+	background-color: #eeb1bf;
+}

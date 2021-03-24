@@ -1,0 +1,23 @@
+.pencil {
+	width: 30px;
+	height: 30px;
+}
+
+.pageTitle {
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 48px;
+	line-height: 58px;
+	padding-bottom: 50px;
+}
+
+.newProjectBtn {
+	margin-top: 70px;
+}
+
+@media screen and (max-width: 400px) {
+	.pageTitle {
+		font-size: 38px;
+	}
+}

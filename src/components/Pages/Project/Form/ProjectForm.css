@@ -1,0 +1,69 @@
+.new-project-form {
+	background: #f4eaea;
+	padding: 30px 0px;
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	margin-bottom: 20px;
+}
+
+.backarrow {
+	width: 50px;
+	height: 50px;
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.backarrow:focus,
+.backarrow:hover {
+	cursor: pointer;
+}
+/* Make circles that indicate the steps of the form: */
+.currentProjectPage {
+	height: 35px;
+	width: 35px;
+	margin: 30px 20px;
+	background-color: #afaaad;
+	border: none;
+	border-radius: 50%;
+	display: inline-block;
+	opacity: 0.5;
+}
+
+.highlight {
+	background-color: #f19b9b;
+}
+
+.hideInputFile {
+	display: none;
+}
+
+/* .or {
+	margin: 20px 0px;
+	font-size: 1.3rem;
+}
+
+.dragdrop {
+	font-style: normal;
+	width: 55%;
+	padding: 30px 0px;
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.dragDropImg {
+	padding-bottom: 20px;
+	max-width: 90%;
+	max-height: 90%;
+}
+
+.file-btn {
+	font-style: normal;
+} */
+
+@media screen and (max-width: 576px) {
+	.step {
+		height: 15px;
+		width: 15px;
+	}
+
+	.projectHeaderOnMobile {
+		font-size: 2.3rem;
+	}
+}
