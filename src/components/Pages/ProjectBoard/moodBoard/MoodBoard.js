@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import ImageViewer from "react-simple-image-viewer";
 
@@ -27,7 +27,7 @@ const MoodBoard = () => {
 
 	console.log(userProject);
 
-	const [images, setImages] = useState([]);
+	// const [images, setImages] = useState([]);
 
 	// console.log(userProject.moodBoardImages);
 	// const moodImage = userProject.moodBoardImages;
@@ -126,7 +126,7 @@ const MoodBoard = () => {
 	}
 
 	//handle upload request to store and then server
-	const history = useHistory();
+	// const history = useHistory();
 	useEffect(() => {
 		// const uploadFiles = () => {
 		if (fileBaseError) {
@@ -144,7 +144,7 @@ const MoodBoard = () => {
 
 		// convBase64ToFile(filesBase64[0]);
 
-		let patchRequestType = "moodBoard";
+		let patchRequestType = "moodboard";
 		if (filesBase64.length > 0) {
 			dispatch(
 				updateAProject(projectId, user_id, filesBase64, patchRequestType)
@@ -185,7 +185,7 @@ const MoodBoard = () => {
 							"MoodBoard",
 							userProject.productionDate
 						)}
-						<FileUploadRebuild uploadFiles={convertFilesToBase64} acceptAll />
+						<FileUploadRebuild uploadFiles={convertFilesToBase64} />
 
 						<div className="imageDisplay">
 							{displayImages.map((src, index) => (

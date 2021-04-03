@@ -51,6 +51,7 @@ const projectReducer = (state = initialProjectState, action) => {
 						moodBoardImages: action.payload.moodBoardImages,
 						moodBoardImageName: action.payload.moodBoardImageName,
 						files: [],
+						fileName: [],
 						notes: [],
 						callSheet: [],
 						contacts: [],
@@ -74,6 +75,7 @@ const projectReducer = (state = initialProjectState, action) => {
 
 			//! this is the part to figure
 			tempArray[index].files = action.payload.file_data;
+			tempArray[index].fileName = action.payload.fileNames;
 			return {
 				...state, //copying the orignal state
 				project: tempArray, //reassigning project to tempArray

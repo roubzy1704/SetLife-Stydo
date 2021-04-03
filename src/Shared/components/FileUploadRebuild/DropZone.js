@@ -1,3 +1,5 @@
+//TODO delete this file and dropZone.css
+
 import React from "react";
 import "./DropZone.css";
 

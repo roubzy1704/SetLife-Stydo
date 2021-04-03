@@ -10,9 +10,9 @@ const ErrorModal = (props) => {
 			header="An Error Occurred!"
 			show={!!props.show}
 			message={props.message}
+			statusCode={props.statusCode}
 			buttonText="Okay"
-			errorOnly
-		>
+			errorOnly>
 			<p>{props.error}</p>
 		</Modal>
 	);

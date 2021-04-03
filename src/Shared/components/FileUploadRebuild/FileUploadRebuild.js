@@ -7,6 +7,7 @@ handle the processing and uploading of files to server on its own will resolve a
 P.S. I will still keep the previous file uplaod for the new projectform, the project form is what caused this while issue in the first place. 
 But after implementing this process I will try and see if I can change the new project
 upload component to this one. 
+P.S. This fileuploadrebuild will also compress all images
 TODO 
 */
 
@@ -24,18 +25,21 @@ const FileUploadRebuild = (props) => {
 	const [errorMessage, setErrorMessage] = useState(""); //string to display error message
 	const [validFiles, setValidFiles] = useState([]); //this will hold validFiles, and will not allow duplicates using the useEffect below
 	const [unsupportedFiles, setUnsupportedFiles] = useState([]);
+	const [filesBase64, setFilesBase64] = useState([]); //holds files in base64 format
+	const [fileName, setFileName] = useState([]); //holds fileNames to be associated with base64 array
 
 	useEffect(() => {
 		//using reduce, find, and concat methods to remove duplicates and add the individual values into the new array validFiles.
-		let filteredArray = selectedFiles.reduce((file, current) => {
-			const x = file.find((item) => item.name === current.name);
+		let filteredArr = selectedFiles.reduce((acc, current) => {
+			const x = acc.find((item) => item.name === current.name);
 			if (!x) {
-				return file.concat([current]);
+				return acc.concat([current]);
 			} else {
-				return file;
+				return acc;
 			}
 		}, []);
-		setValidFiles([...filteredArray]);
+
+		setValidFiles([...filteredArr]);
 	}, [selectedFiles]);
 
 	// When a file is dragged into a browser from the OS, the browser will attempt to open and display it by default.
@@ -70,22 +74,30 @@ const FileUploadRebuild = (props) => {
 		"image/x-icon",
 	];
 
+	//! DONT DELETE THIS
+	// const otherValidTypes = [
+	// 	"application/pdf", //pdf
+	// 	"text/plain",	//plain text
+	// 	"application/msword", //rich text
+	// 	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", //ms excel
+	// 	"application/vnd.ms-excel",	//csv excel
+	// 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document" //ms word
+	// ]
+
 	//based on validate result handle file will either add file to selectedFile Array, or display and error
 	const handleFiles = (files) => {
 		for (let i = 0; i < files.length; i++) {
 			if (validateFile(files[i])) {
-				console.log(files[i]);
 				//!before I save the file to SelectFiles array state, I want to compress the image
-				//first check if file is an image,
-				// if (validTypes.indexOf(files[i].type) !== -1) {
-				// 	//now compress file using browser-image-compression package
-				// 	// let compressedImg = async () => {
-				// 	// let compressedImg = await
-				// 	handleImageUpload(files[i]);
-				// 	// };
-				// 	// console.log(compressedImg);
-				// }
-				// add to an array so we can display the name of file
+				//first check if file is an image
+				if (validTypes.indexOf(files[i].type) !== -1) {
+					//now compress file using browser-image-compression package
+					handleImageCompression(files[i]);
+				}
+				//add acceptAll prop, to validate true for files in files, callsheet, budget and receipts, and add to selected array
+				//TODO might add an otherValidTypes check above to filter for pdf, word, excel and txt files types
+			} else if (props.acceptAll) {
+				//add files to selectedFiles for display on screen
 				setSelectedFiles((prevArray) => [...prevArray, files[i]]);
 			} else {
 				// add a new property called invalid
@@ -101,10 +113,10 @@ const FileUploadRebuild = (props) => {
 	};
 
 	//function used to compress images
-	function handleImageUpload(imageFile) {
+	function handleImageCompression(imageFile) {
 		// var imageFile = event.target.files[0];
-		console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
-		console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+		// console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+		// console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
 
 		var options = {
 			maxSizeMB: 1,
@@ -113,32 +125,37 @@ const FileUploadRebuild = (props) => {
 		};
 		imageCompression(imageFile, options)
 			.then(function (compressedFile) {
-				console.log(
-					"compressedFile instanceof Blob",
-					compressedFile instanceof Blob
-				); // true
-				console.log(
-					`compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-				); // smaller than maxSizeMB
+				// console.log(
+				// 	"compressedFile instanceof Blob",
+				// 	compressedFile instanceof Blob
+				// ); // true
+				// console.log(
+				// 	`compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+				// ); // smaller than maxSizeMB
 
-				// return compressedFile; // write your own logic
-				setSelectedFiles((prevArray) => [...prevArray, imageFile]);
+				//add file to selectedFiles for display on screen
+				setSelectedFiles((prevArray) => [...prevArray, compressedFile]);
 			})
 			.catch(function (error) {
-				console.log(error.message);
+				console.log(error);
+				setSelectedFiles((prevArray) => [...prevArray, imageFile]);
+				// set error message
+				setErrorMessage("An error occured while compressing");
+				//Each invalid file dropped by the user will be added to the array.
+				setUnsupportedFiles((prevArray) => [...prevArray, imageFile]);
 			});
 	}
 
 	//this validates files, I really dont need this for files, callsheet, budget and receipts but I need for moodboard to allow only pictures
+	//*and thats unfortunate because I cant compress pdf, word or ecxel files that might be too big, we will see how this affects the program
+	//*in the future, and look at alternatives then
 	const validateFile = (file) => {
-		//add accept all prop, to validate true for files, callsheet, budget and receipts
-		if (props.acceptAll) {
-			return true;
-		}
+		//if not an image return false
 		if (validTypes.indexOf(file.type) === -1) {
 			return false;
 		}
 
+		//return true if file is an image
 		return true;
 	};
 
@@ -185,10 +202,6 @@ const FileUploadRebuild = (props) => {
 		}
 	};
 
-	//HANDLING CLICK EVENT FOR FILE UPLOAD
-	//send validFiles and unsupportedFiles array to NewProjectForm
-	// const { allFiles } = props;
-
 	//set a useref hook
 	const filePickerRef = useRef();
 
@@ -199,47 +212,53 @@ const FileUploadRebuild = (props) => {
 
 	//add a method filesSelected to obtain selected files and pass it to the handleFile method
 	const filesSelected = () => {
-		if (filePickerRef.current.validFiles.length) {
-			handleFiles(filePickerRef.current.validFiles);
+		if (filePickerRef.current.files.length) {
+			handleFiles(filePickerRef.current.files);
 		}
 	};
 
-	//method to handleUpload based on criteria(uploadFiles, uploadBudgetReceipt, uploadCallSheet, uploadMoodBoard)
-	const handleUpload = () => {
-		//will process and upload based on criteria
-		//will send to project update action
-		//display errors, if any make sure i dont lose file upload progress
-		// console.log(validFiles);
+	// Convert file to base64 string
+	function getBase64(eachFile) {
+		var reader = new FileReader();
+		reader.readAsDataURL(eachFile);
+		reader.onload = function () {
+			//add results to state Array
+			setFilesBase64((prevState) => [...prevState, reader.result]);
+			return reader.result;
+		};
+		reader.onerror = function (error) {
+			//if error set error state to try
+			alert("An Error Occured");
+		};
+	}
 
-		//will have a switch that will upload to files, budget, callsheet, moodboard
-		props.uploadFiles(validFiles);
+	//useEffect to convert to base64 and prepare for upload
+	useEffect(() => {
+		//reset fileBase64 and FileName, so that they dont store previous files
+		setFilesBase64([]);
+		setFileName([]);
+		//now set fileBase64 and FileName to hold latest validFiles
+		validFiles.forEach((eachFile) => {
+			//then convert file to base64
+			getBase64(eachFile);
+			setFileName((prevState) => [...prevState, eachFile.name]); //holds file Names to be associated with base64 state array
+		});
+	}, [validFiles]);
 
-		// setTimeout(() => {
+	//method to handleUpload, sends back fileBase64 and fileName to component that called fileUploadRebuild
+	function handleUpload() {
+		props.uploadFiles(filesBase64, fileName);
+
 		validFiles.length = 0;
 		setValidFiles([...validFiles]);
 		setSelectedFiles([...validFiles]);
 		setUnsupportedFiles([...validFiles]);
-		// }, [1000]);
-
-		// //or i can use a settimeout to clear files
-		// if (props.uploadSucessful) {
-		// 	console.log("Deleting...");
-		// 	validFiles.length = 0;
-		// 	setValidFiles([...validFiles]);
-		// 	setSelectedFiles([...validFiles]);
-		// 	setUnsupportedFiles([...validFiles]);
-		// }
-	};
-
-	// const triggerFunc = () => {
-	// 	allFiles(validFiles);
-	// };
+		setFileName([...validFiles]);
+		setFilesBase64([...validFiles]);
+	}
 
 	return (
 		<React.Fragment>
-			{/* {unsupportedFiles.length === 0 && validFiles.length
-				? triggerFunc()
-				: null} */}
 			<input
 				type="file"
 				// id={props.id}

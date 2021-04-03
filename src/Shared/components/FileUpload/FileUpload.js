@@ -16,11 +16,11 @@ const FileUpload = (props) => {
 	const [files, setFiles] = useState([]);
 	const [unsupportedFiles, setUnsupportedFiles] = useState([]);
 
-	const clearAll = () => {
-		setFiles([]);
-		setUnsupportedFiles([]);
-		setSelectedFiles([]);
-	};
+	// const clearAll = () => {
+	// 	setFiles([]);
+	// 	setUnsupportedFiles([]);
+	// 	setSelectedFiles([]);
+	// };
 
 	useEffect(() => {
 		let filteredArray = selectedFiles.reduce((file, current) => {

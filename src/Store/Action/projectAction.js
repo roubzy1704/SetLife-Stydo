@@ -17,27 +17,6 @@ var options = {
 	day: "numeric",
 };
 
-//function used to convert images to binary format
-//for more info
-//https://riptutorial.com/javascript/example/14207/getting-binary-representation-of-an-image-file
-//https://stackoverflow.com/questions/38334315/how-to-create-a-textual-binary-representation-of-an-image-in-javascript
-
-// function ArrayBufferToBinary(buffer) {
-// 	var uint8 = new Uint8Array(buffer);
-// 	return uint8.reduce((binary, uint8) => binary + uint8.toString(2), "");
-// }
-
-// function ArrayBufferToBinary(buffer) {
-// 	// Convert an array buffer to a string bit-representation: 0 1 1 0 0 0...
-// 	var dataView = new DataView(buffer);
-// 	var response = "",
-// 		offset = 8 / 8;
-// 	for (var i = 0; i < dataView.byteLength; i += offset) {
-// 		response += dataView.getInt8(i).toString(2);
-// 	}
-// 	return response;
-// }
-
 export const fetchAllProjects = (user_id) => (dispatch) => {
 	dispatch(setLoadingProject());
 
@@ -50,10 +29,7 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 		params: { user_id: user_id },
 	})
 		.then((res) => {
-			//?maybe add if a res is good check, then dispatch
-			// console.log(res.data.data);
 			const response = res.data.data;
-			console.log(response);
 			let userProjects = [];
 			userProjects = response.map((project) => {
 				return {
@@ -64,15 +40,16 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 					projectId: project.id,
 					moodBoardImages: project.mood_images, //!have to resolve the moodboard binary thing and line below
 					moodBoardImageName: project.mood_images_name,
-					projectCreateDate: new Date().toLocaleDateString("en-US", options), //!this is not sent to me in response, will have to ask what the date in the project is about
+					projectCreateDate: new Date().toLocaleDateString("en-US", options), //TODO is not sent to me in response, will have to ask what the date in the project is about
 					files: project.files,
 					notes: project.notes,
 					callSheet: project.call_sheet,
 					contacts: project.contacts,
 					budgetReceipts: project.receipts,
-					defaultTemplate: project.default_template, //TODO
-					emailTemplates: [], //TODO there is no response for this
-					//pullInventory: [], //nor this
+					//pullInventory: [], //? no route for this
+					//confirmedImages: project.confirmed_images //TODO integrate this
+					//requestImages: project.request_images //TODO integrate this
+					//looks : project.looks //TODO integrate this
 				};
 			});
 
@@ -82,9 +59,8 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 			});
 		})
 		.catch((err) => {
-			// console.log(err.response);
 			//this check for statusText is to prevent an issue that occurs when there are no projects but the
-			//page displays an error received from the server, since they is not need to show an error saying
+			//page displays an error received from the server, since there is not need to show an error saying
 			///user project doesnot exist, I just check to see if that server error happens and ignore it
 			err.response.statusText !== "NOT FOUND" &&
 				dispatch(
@@ -255,21 +231,15 @@ export const createNewProject = (values, files, user_id) => (dispatch) => {
 	}, 1000);
 };
 
-export const updateAProject = (projectId, user_id, files, patchRequestType) => (
-	dispatch
-) => {
-	console.log(files, patchRequestType);
+export const updateAProject = (
+	projectId,
+	user_id,
+	filesBase64,
+	fileNames,
+	patchRequestType
+) => (dispatch) => {
+	console.log("update dispacthed");
 	dispatch(setLoadingProject());
-	console.log(patchRequestType, files);
-
-	dispatch({
-		type: UPDATE_A_PROJECT,
-		payload: {
-			file_data: files,
-			projectId,
-			patchRequestType,
-		},
-	});
 
 	axios({
 		url: `http://localhost:5000/projects/${patchRequestType}`,
@@ -281,16 +251,17 @@ export const updateAProject = (projectId, user_id, files, patchRequestType) => (
 		data: JSON.stringify({
 			project_id: projectId,
 			user_id: user_id,
-			files_data: files,
+			files_data: filesBase64,
 		}),
 	})
 		.then((res) => {
-			console.log(res.data.data);
-			let fileData = res.data.data.files_data;
+			// console.log(res.data.data);
+			// let fileData = res.data.data.files_data;
 			dispatch({
 				type: UPDATE_A_PROJECT,
 				payload: {
-					file_data: fileData, //!change this later
+					file_data: filesBase64,
+					fileNames: fileNames,
 					projectId,
 					patchRequestType,
 				},
@@ -298,12 +269,7 @@ export const updateAProject = (projectId, user_id, files, patchRequestType) => (
 		})
 		.catch((err) => {
 			console.log(err.response);
-<<<<<<< HEAD
-			// dispatch(setErrors(err.response.data.message, err.response.status, true));
-=======
-			
-			dispatch(setErrors(err.response.data.message, err.response.status, true));
->>>>>>> a14a1e4440f994dfcef0b1c8735990d1492f756c
+			dispatch(setErrors(err.response.statusText, err.response.status, true));
 			dispatch(endLoading());
 		});
 };
@@ -323,7 +289,6 @@ export const deleteAProject = (projectId, user_id) => (dispatch) => {
 		}),
 	})
 		.then((res) => {
-			console.log(res); //TODO handle response
 			dispatch({ type: DELETE_A_PROJECT, payload: projectId });
 		})
 		.catch((err) => {
