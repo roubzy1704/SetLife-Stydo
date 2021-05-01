@@ -9,12 +9,14 @@ import {
 	END_LOADING,
 } from "../Action/projectAction";
 
-//!for testing purpose, clear later
-var options = {
-	weekday: "long",
-	month: "long",
-	day: "numeric",
-};
+//!TODO testing purpose, clear later
+// var options = {
+// 	// weekday: "long",
+// 	// month: "long",
+// 	day: "numeric",
+// 	hour: "2-digit",
+// 	minute: "2-digit",
+// };
 
 const initialProjectState = {
 	project: [],
@@ -24,7 +26,6 @@ const initialProjectState = {
 const projectReducer = (state = initialProjectState, action) => {
 	switch (action.type) {
 		case FETCH_ALL_PROJECTS:
-			// console.log(action.payload);
 			return {
 				...state,
 				project: action.payload,
@@ -47,15 +48,17 @@ const projectReducer = (state = initialProjectState, action) => {
 						client: action.payload.client,
 						productionDate: action.payload.productionDate,
 						aboutProject: action.payload.aboutProject,
-						projectCreateDate: new Date().toLocaleDateString("en-US", options),
+						projectCreateDate: action.payload.projectCreateDate,
 						moodBoardImages: action.payload.moodBoardImages,
 						moodBoardImageName: action.payload.moodBoardImageName,
 						files: [],
 						fileName: [],
 						notes: [],
 						callSheet: [],
+						callSheetName: [],
 						contacts: [],
 						budgetReceipts: [],
+						budgetReceiptsName: [],
 						pullInventory: [],
 					},
 				],
@@ -65,17 +68,28 @@ const projectReducer = (state = initialProjectState, action) => {
 		case UPDATE_A_PROJECT:
 			console.log(action.payload);
 			//get index of project to update
-			const index = state.project.findIndex(
-				(proj) => proj.projectId !== action.payload.projectId
-			);
+			const index = state.project.findIndex((proj) => {
+				console.log(proj);
+				return proj.projectId === action.payload.projectId;
+			});
 
-			console.log(index);
 			//making a copy of the state array
 			const tempArray = [...state.project];
 
 			//! this is the part to figure
-			tempArray[index].files = action.payload.file_data;
-			tempArray[index].fileName = action.payload.fileNames;
+
+			switch (action.payload.patchRequestType) {
+				case "files":
+					tempArray[index].files = action.payload.file_data;
+					tempArray[index].fileName = action.payload.file_names;
+					break;
+				case "mooodBoard":
+					tempArray[index].moodBoardImages = action.payload.file_data;
+					tempArray[index].moodBoardImageName = action.payload.file_names;
+					break;
+				default:
+					break;
+			}
 			return {
 				...state, //copying the orignal state
 				project: tempArray, //reassigning project to tempArray

@@ -97,6 +97,7 @@ const FileUploadRebuild = (props) => {
 				//add acceptAll prop, to validate true for files in files, callsheet, budget and receipts, and add to selected array
 				//TODO might add an otherValidTypes check above to filter for pdf, word, excel and txt files types
 			} else if (props.acceptAll) {
+				getBase64(files[i]);
 				//add files to selectedFiles for display on screen
 				setSelectedFiles((prevArray) => [...prevArray, files[i]]);
 			} else {
@@ -218,19 +219,19 @@ const FileUploadRebuild = (props) => {
 	};
 
 	// Convert file to base64 string
-	function getBase64(eachFile) {
+	const getBase64 = (eachFile) => {
 		var reader = new FileReader();
 		reader.readAsDataURL(eachFile);
 		reader.onload = function () {
+			let result = reader.result;
 			//add results to state Array
-			setFilesBase64((prevState) => [...prevState, reader.result]);
-			return reader.result;
+			setFilesBase64((prevState) => prevState.concat(result));
 		};
 		reader.onerror = function (error) {
 			//if error set error state to try
 			alert("An Error Occured");
 		};
-	}
+	};
 
 	//useEffect to convert to base64 and prepare for upload
 	useEffect(() => {
@@ -247,7 +248,17 @@ const FileUploadRebuild = (props) => {
 
 	//method to handleUpload, sends back fileBase64 and fileName to component that called fileUploadRebuild
 	function handleUpload() {
-		props.uploadFiles(filesBase64, fileName);
+		//for some reason, when i added multiple files to the drag and drop
+		//it was sending a  duplicate of all files, so I if I added 9 files separeately and deleted 4
+		//instead of uploading 5 files it will upload 10, with 5 of them being duplicates
+		//the only setFilesBase64 call i have is in the getBase64 function. But for now I will put this check
+		//in place as a temporary solution to this issue. My solution was to remove any duplicate values from an array of strings
+		//I found the Set method, which represents a collection of unique values
+
+		let trimmedFiles = [...new Set(filesBase64)];
+		props.uploadFiles(trimmedFiles, fileName);
+
+		// props.uploadFiles(filesBase64, fileName);
 
 		validFiles.length = 0;
 		setValidFiles([...validFiles]);

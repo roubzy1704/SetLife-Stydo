@@ -1,0 +1,61 @@
+.fileDisplay {
+	margin: 0px auto;
+	padding: 15px;
+	padding-left: 80px;
+}
+
+.form-check {
+	padding: 10px;
+}
+
+.form-check-input {
+	width: 30px;
+	height: 30px;
+	/* padding-left: -0px; */
+}
+
+.form-check-label {
+	padding-top: 8px;
+	padding-left: 20px;
+}
+
+.searchButton {
+	position: relative;
+	padding-top: 80px;
+}
+
+.searchButton span {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.scrollComponent {
+	position: relative;
+	height: 40vh;
+	overflow-y: scroll;
+	width: 90%;
+	margin-top: 30px;
+	border: 1px solid #afaaad;
+	padding: 10px;
+}
+
+.scrollspy-example:focus,
+.scrollspy-example:active {
+	border: none;
+}
+
+.scrollspy-example hr {
+	background-color: #afaaad;
+	width: 90%;
+}
+
+.scrollspy-example label:hover {
+	font-size: large;
+	color: #84cee5;
+	cursor: pointer;
+}
+
+.divider {
+	border: 1px solid black;
+}

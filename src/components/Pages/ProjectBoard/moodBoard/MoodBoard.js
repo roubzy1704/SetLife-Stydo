@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import ImageViewer from "react-simple-image-viewer";
 
@@ -25,20 +25,75 @@ const MoodBoard = () => {
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
-	console.log(userProject);
+	const clearError = () => {
+		dispatch(clearErrors());
+	};
 
-	// const [images, setImages] = useState([]);
+	const dispatch = useDispatch();
+	let user_id = 4;
 
-	// console.log(userProject.moodBoardImages);
-	// const moodImage = userProject.moodBoardImages;
+	const [filesBase64ToUpload, setFileBase64ToUpload] = useState([]); //will hold files in base64 that are converted from base64 and will upload
+	const [fileNamesToUpload, setFileNamesToUpload] = useState([]); //will hold file name that are to be uploaded
+
+	//const [encodedBase64, setEncodedBase64] = useState([]); //holds fetched project files
+	//const [displayFileName, setDisplayFileName] = useState([]); //holds fetched project file names
+
+	console.log("userProject MoodBoard  ", userProject);
 
 	//react-image-viewer
 	const [currentImage, setCurrentImage] = useState(0);
 	const [isViewerOpen, setIsViewerOpen] = useState(false);
-	let displayImages = [];
-	if (userProject) {
-		displayImages = userProject.moodBoardImages;
-	}
+	const [images, setImages] = useState([]);
+
+	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
+	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
+	useEffect(() => {
+		dispatch(fetchAllProjects(user_id));
+	}, [dispatch, user_id]);
+
+	useEffect(() => {
+		//if userProject exist
+		if (userProject) {
+			if (userProject.moodBoardImages !== 0) {
+				setImages(userProject.moodBoardImages);
+				// setDisplayFileName(userProject.filesName);
+			}
+		}
+	}, [userProject]);
+
+	const history = useHistory();
+
+	useEffect(() => {
+		//if there are images to upload (filesBase64ToUpload/fileNamesToUpload), then run this useEffect block to dispatch updateAproject
+		if (filesBase64ToUpload.length !== 0 && fileNamesToUpload.length !== 0) {
+			dispatchStore();
+
+			//reset filesBase64ToUpload and fileNamesToUpload
+			setFileBase64ToUpload([]);
+			setFileNamesToUpload([]);
+
+			if (!isLoading) {
+				history.goBack();
+			}
+		}
+	}, [dispatch, filesBase64ToUpload, fileNamesToUpload]);
+
+	const dispatchStore = useCallback(() => {
+		dispatch(
+			updateAProject(
+				projectId,
+				user_id,
+				filesBase64ToUpload,
+				fileNamesToUpload,
+				"moodboard"
+			)
+		);
+	}, [filesBase64ToUpload, fileNamesToUpload, projectId, user_id, dispatch]);
+
+	const filesToUpload = (filesInB64, file_Names) => {
+		setFileBase64ToUpload(filesInB64);
+		setFileNamesToUpload(file_Names);
+	};
 
 	const openImageViewer = useCallback((index) => {
 		setCurrentImage(index);
@@ -49,116 +104,6 @@ const MoodBoard = () => {
 		setCurrentImage(0);
 		setIsViewerOpen(false);
 	};
-
-	const clearError = () => {
-		dispatch(clearErrors());
-	};
-
-	const dispatch = useDispatch();
-	let user_id = 1;
-
-	useEffect(() => {
-		dispatch(fetchAllProjects(user_id));
-		// userProject.MoodBoardImages.forEach((image) => {
-		// 	displayImages.push(image);
-		// });
-		// displayImages = userProject.moodBoardImages;
-	}, [dispatch, user_id]);
-
-	// //will hold the files upload by user
-	// //I have to use the useRef hook here because I want the image files to be saved here, when i call
-	// //the handleSubmit function. If not the handelSubmit function will send fileSave as an empty array
-	// //So I am creating a refrence for fileSave to return a mutable ref object whose .current property is initilaized to the passed argument
-	// let fileSave = useRef([]);
-
-	// const allFiles = (files) => {
-	// 	//now because of the useRef hook, every time I drag and drop a file, a new array is pushed to files
-	// 	//so files now looks like an array of arrays, with the last array in the array holding my last file upload
-	// 	//this will be resolved in the projectAction component, I will take the last array in the element for submission
-	// 	fileSave.current.push(files);
-	// 	// console.log(fileSave.current);
-	// 	//i have to save the files in a variable, and cant do it like below using setState
-	// 	//because in react we cant use setState on a component (NewProjectForm)
-	// 	//while rendering another component (FileUpload)
-	// 	// setProjectImages((prevFiles) => [...prevFiles, files]);
-	// };
-
-	// //we need this useEffect to save the fileupload data in image state here
-	// //because if we dont do that we get an error that a component cant update while rendering a different component warning
-	// //this useEffect solves that. by running it when the data changes and not on every component update
-	// useEffect(() => {
-	// 	setImages(fileSave.current);
-	// }, []);
-
-	// const handleUpload = () => {
-	// 	if (images.length <= 0) {
-	// 		console.log("Nothing to submit");
-	// 	} else {
-	// 		console.log("I will submit files");
-	// 		console.log(images[images.length - 1]);
-	// 		displayImages.push(fileSave.current);
-	// 	}
-	// };
-
-	const [filesBase64, setFilesBase64] = useState([]);
-	const [fileBaseError, setFileBaseError] = useState(false);
-
-	const convertFilesToBase64 = (files) => {
-		//convert files to base64 format for uplaod to server
-
-		files.forEach((eachFile) => {
-			getBase64(eachFile);
-		});
-	};
-
-	// Convert file to base64 string
-	function getBase64(file) {
-		var reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = function () {
-			//add results to state Array
-			setFilesBase64((prevState) => [...prevState, reader.result]);
-		};
-		reader.onerror = function (error) {
-			//if error set error state to try
-			setFileBaseError(true);
-		};
-	}
-
-	//handle upload request to store and then server
-	// const history = useHistory();
-	useEffect(() => {
-		// const uploadFiles = () => {
-		if (fileBaseError) {
-			console.log("AN ERROR OCCURED PLEASE TRY AGAIN");
-			//throw error to screen
-			//erase everthing and history.push to file
-		}
-		// setTimeout(() => {
-		console.log(filesBase64);
-		// }, [1000]);
-
-		// let array = dataURLtoFile(filesBase64[0], "hello.png");
-
-		// console.log(array);
-
-		// convBase64ToFile(filesBase64[0]);
-
-		let patchRequestType = "moodboard";
-		if (filesBase64.length > 0) {
-			dispatch(
-				updateAProject(projectId, user_id, filesBase64, patchRequestType)
-			);
-			//reset everything
-			// setTimeout(() => {
-			// if (!isLoading && !error) {
-			// 	setFileBaseError(false);
-			// 	setFilesBase64([]);
-			// 	history.push(`/projectBoard/${projectId}`);
-			// }
-			// }, [1000]);
-		}
-	}, [fileBaseError, filesBase64, dispatch]);
 
 	//!have to resolve the issues with the page crashing on refresh. I did something about this in projectBoard. look at that
 	//could pass the project as a prop to modBoard?
@@ -185,24 +130,26 @@ const MoodBoard = () => {
 							"MoodBoard",
 							userProject.productionDate
 						)}
-						<FileUploadRebuild uploadFiles={convertFilesToBase64} />
+						<FileUploadRebuild uploadFiles={filesToUpload} />
 
-						<div className="imageDisplay">
-							{displayImages.map((src, index) => (
-								<img
-									src={src}
-									onClick={() => openImageViewer(index)}
-									width="200px"
-									height="200px"
-									key={index}
-									style={{ margin: "2px" }}
-									alt=""
-								/>
-							))}
+						<div className="fileDisplay bondary">
+							{images.length
+								? images.map((src, index) => (
+										<img
+											src={src}
+											onClick={() => openImageViewer(index)}
+											width="200px"
+											height="200px"
+											key={index}
+											style={{ margin: "2px" }}
+											alt=""
+										/>
+								  ))
+								: "No Image to display. Upload one above"}
 
 							{isViewerOpen && (
 								<ImageViewer
-									src={displayImages}
+									src={images}
 									currentIndex={currentImage}
 									onClose={closeImageViewer}
 									backgroundStyle={{

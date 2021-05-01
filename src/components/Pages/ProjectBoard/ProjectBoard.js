@@ -36,10 +36,10 @@ const ProjectBoard = (props) => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 1;
+	let user_id = 4;
 
 	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
-	//is absent the page with crash, my goal was to figure out a way to preserve data on page refresh.
+	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
 	}, [dispatch, user_id]);
@@ -110,8 +110,7 @@ const ProjectBoard = (props) => {
 									</div>
 								</Button>
 								<Button
-									to={`/ProjectBoard/${userProject.projectId}/${user_id}/emailTemplates`}
-								>
+									to={`/ProjectBoard/${userProject.projectId}/${user_id}/emailTemplates`}>
 									<div className="row boardEntry">
 										<div className="col-sm-2 icon">
 											<img src={emailTemplates} alt="hangar"></img>
@@ -132,8 +131,7 @@ const ProjectBoard = (props) => {
 									</div>
 								</Button>
 								<Button
-									to={`/ProjectBoard/${userProject.projectId}/budgetReceipts`}
-								>
+									to={`/ProjectBoard/${userProject.projectId}/budgetReceipts`}>
 									<div className="row boardEntry">
 										<div className="col-sm-2 icon">
 											<img src={budgetReceipts} alt="hangar"></img>
@@ -154,8 +152,7 @@ const ProjectBoard = (props) => {
 									</div>
 								</Button>
 								<Button
-									to={`/ProjectBoard/${userProject.projectId}/pullInventory`}
-								>
+									to={`/ProjectBoard/${userProject.projectId}/pullInventory`}>
 									<div className="row boardEntry">
 										<div className="col-sm-2 ">
 											<img src={pullInventory} alt="hangar"></img>

@@ -1,6 +1,7 @@
 import React from "react";
 
-import callSheet from "../../../../Images/callSheet.png";
+import callSheet from "../../../Images/callSheet.png";
+import "./FileDisplay.css";
 
 const FileDisplayEntry = (props) => {
 	// console.log(props);
@@ -22,17 +23,21 @@ const FileDisplayEntry = (props) => {
 	}
 
 	return (
-		<div className="salmon">
-			<button
+		<React.Fragment>
+			<label
 				// href={props.value}
 				// download
+				className="hover"
 				color="transparent"
 				// target="_blank"
 				onClick={downloadFile}>
-				FIleDisplay
 				<img src={callSheet} alt="fileDisplay" />
-			</button>
-		</div>
+				<div>
+					{props.name}
+					{"Happy long giving.pfdf"}
+				</div>
+			</label>
+		</React.Fragment>
 	);
 };
 

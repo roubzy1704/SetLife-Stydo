@@ -1,0 +1,11 @@
+.horizontalList {
+	margin-top: 20px;
+	margin-bottom: -20px;
+	display: inline-block;
+}
+
+.eachFile {
+	margin-right: 50px;
+	margin-bottom: 50px;
+	display: inline-block;
+}

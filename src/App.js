@@ -30,6 +30,9 @@ import Files from "./components/Pages/ProjectBoard/Files/Files";
 import PullInventory from "./components/Pages/ProjectBoard/PullInventory/PullInventory";
 import Archive from "./components/Pages/ProjectBoard/Archive/Archive";
 import Database from "./components/Pages/Database/Database";
+import BrandContacts from "./components/Pages/Database/BrandContacts";
+import ForumHome from "./components/Pages/Forum/ForumHome";
+import NewForumPost from "./components/Pages/Forum/NewForumPost";
 import { errorsReducer } from "./Store/Reducers/ErrorReducer";
 
 //TODO import shared.css but first convert it to sass and resolve css conflicts
@@ -83,6 +86,15 @@ function App() {
 							</Route>
 							<Route path="/database" exact>
 								<Database />
+							</Route>
+							<Route path="/database/:brandName" exact>
+								<BrandContacts />
+							</Route>
+							<Route path="/forum" exact>
+								<ForumHome />
+							</Route>
+							<Route path="/forum/newForumPost" exact>
+								<NewForumPost />
 							</Route>
 							<Route path="/projectHome" exact>
 								<ProjectHome />

@@ -33,9 +33,9 @@ const NewTemplate = (props) => {
 
 	const dispatch = useDispatch();
 
-	// let user_id = 1;
+	// let user_id = 4;
 	//USERID RETRIEVAL
-	// let user_id = 1;
+	// let user_id = 4;
 	const user_id = useParams().user_id; //retireve user_id from route url
 	// const userEmailTemplates = useSelector((state) => state.user.emailTemplates); //retrieve email templates from store
 

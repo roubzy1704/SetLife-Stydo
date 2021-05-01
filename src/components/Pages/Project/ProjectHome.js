@@ -17,18 +17,19 @@ const ProjectHome = (props) => {
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
-	// console.log("projectHome  " + isLoading);
-
 	const dispatch = useDispatch();
 
 	const clearError = () => {
 		dispatch(clearErrors());
 	};
 
-	let user_id = 1;
+	let user_id = 4;
 
 	useEffect(() => {
+		// if (projectList.length) {
+		//this forces a dispatch, when i create a new project and history.push back to projectHome, fetch will trigger
 		dispatch(fetchAllProjects(user_id));
+		// }
 	}, [dispatch, user_id]);
 
 	const deleteProject = (projectId) => {

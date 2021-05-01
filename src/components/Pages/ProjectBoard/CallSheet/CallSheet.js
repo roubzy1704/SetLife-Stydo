@@ -29,8 +29,10 @@ const CallSheet = () => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 1;
+	let user_id = 4;
 
+	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
+	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
 	}, [dispatch, user_id]);

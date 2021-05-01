@@ -37,7 +37,7 @@ const EmailTemplates = () => {
 	const dispatch = useDispatch();
 
 	//USERID RETRIEVAL
-	// let user_id = 1;
+	// let user_id = 4;
 	const user_id = useParams().user_id; //retireve user_id from route url
 	const userEmailTemplates = useSelector((state) => state.user.emailTemplates); //retrieve email templates from store
 
@@ -78,16 +78,14 @@ const EmailTemplates = () => {
 						)}
 						<div className="newTemplateBtn">
 							<Button
-								to={`/ProjectBoard/${userProject.projectId}/${user_id}/emailTemplates/newTemplate`}
-							>
+								to={`/ProjectBoard/${userProject.projectId}/${user_id}/emailTemplates/newTemplate`}>
 								<span
 									className="iconify"
 									data-icon="ant-design:plus-outlined"
 									data-inline="false"
 									style={{ color: "grey" }}
 									data-width="70"
-									data-height="70"
-								></span>
+									data-height="70"></span>
 							</Button>
 						</div>
 						<div className="templates proxima">

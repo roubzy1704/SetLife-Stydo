@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { CheckCircle } from "react-feather";
+import imageCompression from "browser-image-compression";
 
 import dragDrop from "../../../Images/dragdrop.png";
 import trashCan from "../../../Images/trashCan.png";
@@ -92,8 +93,8 @@ const FileUpload = (props) => {
 	const handleFiles = (files) => {
 		for (let i = 0; i < files.length; i++) {
 			if (validateFile(files[i])) {
-				// add to an array so we can display the name of file
-				setSelectedFiles((prevArray) => [...prevArray, files[i]]);
+				//!before I save the file to SelectFiles array state, I want to compress the image
+				handleImageCompression(files[i]);
 			} else {
 				// add a new property called invalid
 				// add to the same array so we can display the name of the file
@@ -105,6 +106,40 @@ const FileUpload = (props) => {
 			}
 		}
 	};
+
+	//function used to compress images
+	function handleImageCompression(imageFile) {
+		// var imageFile = event.target.files[0];
+		// console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+		// console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+		var options = {
+			maxSizeMB: 1,
+			maxWidthOrHeight: 1920,
+			useWebWorker: true,
+		};
+		imageCompression(imageFile, options)
+			.then(function (compressedFile) {
+				// console.log(
+				// 	"compressedFile instanceof Blob",
+				// 	compressedFile instanceof Blob
+				// ); // true
+				// console.log(
+				// 	`compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+				// ); // smaller than maxSizeMB
+
+				//add file to selectedFiles for display on screen
+				setSelectedFiles((prevArray) => [...prevArray, compressedFile]);
+			})
+			.catch(function (error) {
+				console.log(error);
+				setSelectedFiles((prevArray) => [...prevArray, imageFile]);
+				// set error message
+				setErrorMessage("An error occured while compressing");
+				//Each invalid file dropped by the user will be added to the array.
+				setUnsupportedFiles((prevArray) => [...prevArray, imageFile]);
+			});
+	}
 
 	const fileSize = (size) => {
 		if (size === 0) return "0 Bytes";

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllProjects } from "../../../Store/Action/projectAction";
 import { clearErrors } from "../../../Store/Action/errorAction";
 import ProjectList from "../../Pages/Project/ProjectList";
+import DashBoardList from "./DashBoardList";
 import Button from "../../../Shared/UIElements/Button/Button";
 import LoadingSpinner from "../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 import ErrorModal from "../../../Shared/UIElements/ErrorModal/ErrorModal";
@@ -21,7 +22,7 @@ const DashboardHome = (props) => {
 		dispatch(clearErrors());
 	};
 
-	let user_id = 1;
+	let user_id = 4;
 
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
@@ -75,9 +76,8 @@ const DashboardHome = (props) => {
 										{" "}
 										<div className="">
 											<h5 className="dashboardDatabaseTitle proxima">
-												DATABASE
+												<DashBoardList dashboard="true" />
 											</h5>
-											<div>Burberry Chanel Prada</div>
 											<div className=" project-btn-grp">
 												<Button to="/database" className="blue-button">
 													See More
@@ -94,15 +94,14 @@ const DashboardHome = (props) => {
 							{/* //*column to hold Forum on dashboard */}
 							<div className="row-sm-2 dashboardForumTab dashboardDatabaseTitle proxima">
 								FORUM{" "}
-								<Button to="/notFound">
+								<Button to="/forum">
 									<span
 										className="iconify cross"
 										data-icon="bx:bx-plus"
 										data-inline="false"
 										style={{ color: "grey" }}
 										data-width="40"
-										data-height="40"
-									></span>
+										data-height="40"></span>
 								</Button>
 								<div className="forum"></div>
 							</div>

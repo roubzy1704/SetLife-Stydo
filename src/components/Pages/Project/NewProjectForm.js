@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -11,7 +11,7 @@ import ErrorModal from "../../../Shared/UIElements/ErrorModal/ErrorModal";
 import { clearErrors } from "../../../Store/Action/errorAction";
 import LoadingSpinner from "../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 
-const NewProjectForm = (props) => {
+const NewProjectForm = () => {
 	const WizardStep = ({ children }) => children;
 
 	//state variable used to display temp client and productionDate on page 3 of newProject form
@@ -21,7 +21,7 @@ const NewProjectForm = (props) => {
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
-	let user_id = 1;
+	let user_id = 4;
 
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -39,13 +39,19 @@ const NewProjectForm = (props) => {
 	//the handleSubmit function. If not the handelSubmit function will send fileSave as an empty array
 	//So I am creating a refrence for fileSave to return a mutable ref object whose .current property is initilaized to the passed argument
 	let fileSave = useRef([]);
+	// const [boardCheck, setBoardCheck] = useState(false);
+	let boardCheck = useRef(false);
 
 	const allFiles = (files) => {
 		//now because of the useRef hook, every time I drag and drop a file, a new array is pushed to files
 		//so files now looks like an array of arrays, with the last array in the array holding my last file upload
 		//this will be resolved in the projectAction component, I will take the last array in the element for submission
+		//* I will do this here, in handleSubmit function, in order to clean up my code and have seperation of concerns
 		fileSave.current.push(files);
 		fileLength.current = fileSave.current.length;
+		boardCheck.current = true;
+		console.log("here", boardCheck);
+
 		// console.log(fileLength);
 
 		// saveFileLen(fileLength);
@@ -57,20 +63,57 @@ const NewProjectForm = (props) => {
 		// setFileCount(fileSave.current.length);
 	};
 
-	// console.log(fileLength.current);
+	//arrays that will and base64 array, imageNames and projectData for submission
+	const [fileNames, setFileNames] = useState([]);
+	const [imageBase64, setImageBase64] = useState([]);
+	const [projectData, setProjectData] = useState({});
+
+	useEffect(() => {
+		if (fileNames.length) {
+			if (imageBase64.length === fileNames.length) {
+				dispatch(
+					createNewProject(projectData, imageBase64, fileNames, user_id)
+				);
+				history.push("/projectHome");
+			}
+		}
+	}, [dispatch, imageBase64, fileNames]);
 
 	const handleSubmit = (values) => {
-		dispatch(createNewProject(values, fileSave.current, user_id));
-		// console.log(isLoading);
-		if (!isLoading && !error.show) {
-			fileLength = 0;
-			// console.log("loading done" + isLoading);
-			setTimeout(() => {
-				history.push("/projectHome");
-			}, 1000);
+		//so the object here is to first compress the images and then convert to base64 while saving the image names
+		setProjectData(values);
+		//arrays that will hold file names
+
+		//I need to grab the last array in the array save that array in imageFIles and the image names in imageNames
+		//first check if a file exist
+		if (fileSave.current.length) {
+			//then map thru array of last element in array and save it in imageFiles array
+			fileSave.current[fileSave.current.length - 1].forEach((image) => {
+				//and save image names to fileNames array
+				setFileNames((prevState) => [...prevState, image.name]);
+				//next compress Images, and convert to base64 (ceoversion will be called from handleImageCompression function)
+				getBase64(image);
+			});
 		}
-		fileSave.current = [];
+		//no image to upload, dispatch as usual
+		else {
+			dispatch(createNewProject(values, [], [], user_id));
+			history.push("/projectHome");
+		}
 	};
+
+	function getBase64(file) {
+		var reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = function () {
+			//push results to fileBase64 array
+			setImageBase64((prevState) => [...prevState, reader.result]);
+		};
+		reader.onerror = function (error) {
+			//?maybe throw an error
+			console.log(error);
+		};
+	}
 
 	return (
 		<React.Fragment>
@@ -173,7 +216,7 @@ const NewProjectForm = (props) => {
 								</div>
 								<div className="text-left pl-5 pb-5 col">
 									<div className="row pb-3 pt-3">
-										{fileLength.current > 0 ? (
+										{boardCheck.current ? (
 											<span
 												className="iconify icon"
 												data-icon="ant-design:check-outlined"

@@ -11,7 +11,7 @@ const initialState = {
 export const errorsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case SET_ERRORS:
-			console.log(action.payload);
+			// console.log(action.payload);
 			return {
 				error: {
 					message: action.payload.message,

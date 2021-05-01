@@ -18,8 +18,7 @@ const navbar = (props) => {
 					data-target="#navbarSupportedContent"
 					aria-controls="navbarSupportedContent"
 					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
+					aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
 				</button>
 
@@ -36,7 +35,7 @@ const navbar = (props) => {
 							</NavLink>
 						</li>
 						<li className="nav-item">
-							<NavLink to="/notFound" className="nav-link " exact>
+							<NavLink to="/forum" className="nav-link " exact>
 								Forum
 							</NavLink>
 						</li>

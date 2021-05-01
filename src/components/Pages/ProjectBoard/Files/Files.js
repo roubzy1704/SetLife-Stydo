@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
 	fetchAllProjects,
 	updateAProject,
-	setLoadingProject,
-	endLoading,
 } from "../../../../Store/Action/projectAction";
 import { ProjectBoardPageNav } from "../../../../Shared/util/PageNavTitle";
 import { clearErrors } from "../../../../Store/Action/errorAction";
 import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
 import LoadingSpinner from "../../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 import FileUploadRebuild from "../../../../Shared/components/FileUploadRebuild/FileUploadRebuild";
-import FileDisplayList from "./FileDIsplayList";
+import FileDisplayList from "../../../../Shared/UIElements/FileDisplay/FileDisplayList";
 import "../../../../Shared/UIElements/Shared.css";
 import "./Files.css";
 
@@ -35,71 +33,73 @@ const Files = () => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 1;
+	let user_id = 4;
 
+	const [filesBase64ToUpload, setFileBase64ToUpload] = useState([]); //will hold files in base64 that are converted from base64 and will upload
+	const [fileNamesToUpload, setFileNamesToUpload] = useState([]); //will hold file name that are to be uploaded
+
+	console.log("userProject Files  ", userProject);
+
+	const [encodedBase64, setEncodedBase64] = useState([]); //holds fetched project files
+	const [displayFileName, setDisplayFileName] = useState([]); //holds fetched project file names
+
+	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
+	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
-		console.log("i run");
 		dispatch(fetchAllProjects(user_id));
 	}, [dispatch, user_id]);
 
-	console.log("userProject ", userProject);
+	const history = useHistory();
+
+	useEffect(() => {
+		//if userProject exist
+		if (userProject) {
+			if (userProject.files.length !== 0) {
+				console.log("files in FIles ", userProject.files);
+				setEncodedBase64(userProject.files);
+				setDisplayFileName(userProject.filesName);
+			}
+		}
+	}, [userProject]);
+
+	useEffect(() => {
+		//if there are images to upload (filesBase64ToUpload/fileNamesToUpload), then run this useEffect block to dispatch updateAproject
+		if (filesBase64ToUpload.length !== 0 && fileNamesToUpload.length !== 0) {
+			dispatchStore();
+
+			//reset filesBase64ToUpload and fileNamesToUpload
+			setFileBase64ToUpload([]);
+			setFileNamesToUpload([]);
+
+			if (!isLoading) {
+				history.goBack();
+			}
+		}
+	}, [dispatch, filesBase64ToUpload, fileNamesToUpload]);
+
+	const dispatchStore = useCallback(() => {
+		dispatch(
+			updateAProject(
+				projectId,
+				user_id,
+				filesBase64ToUpload,
+				fileNamesToUpload,
+				"files"
+			)
+		);
+	}, [filesBase64ToUpload, fileNamesToUpload, projectId, user_id, dispatch]);
 
 	/*
 
 	FILE BODY 
 
 	*/
-	const [fileBase64, setFileBase64] = useState([]); //will hold file that are converted from base64
-	const [fileNames, setFileNames] = useState([]);
 
-	useEffect(() => {
-		console.log("he runs");
-		// if (userProject) {
-		// 	if (userProject.files) {
-		// 		setDataFiles(userProject.files);
-		// 	}
-		// }
-
-		if (fileBase64.length !== 0 && fileNames.length !== 0) {
-			dispatch(
-				updateAProject(projectId, user_id, fileBase64, fileNames, "files")
-			);
-			dispatch(endLoading());
-		}
-	}, [fileBase64, fileNames]);
-
-	const history = useHistory();
-	const filesToUpload = (filesBase, fileName) => {
-		setFileBase64([filesBase]);
-		setFileNames([fileName]);
-		// dispatch(
-		// 	updateAProject(projectId, user_id, filesBase64, fileName, "files")
-		// );
-
-		dispatch(setLoadingProject());
-		console.log(isLoading);
-
-		// if (!isLoading && !error.show) {
-		// 	// console.log("loading done" + isLoading);
-		// 	setTimeout(() => {
-		// 		history.push("/projectHome");
-		// 	}, 1000);
-		// }
+	const filesToUpload = (filesInB64, file_Names) => {
+		console.log(filesInB64, file_Names);
+		setFileBase64ToUpload(filesInB64);
+		setFileNamesToUpload(file_Names);
 	};
-
-	//convert base64 back to File
-	// function dataURLtoFile(dataurl, filename) {
-	// 	var arr = dataurl.split(","),
-	// 		mime = arr[0].match(/:(.*?);/)[1],
-	// 		bstr = atob(arr[1]),
-	// 		n = bstr.length,
-	// 		u8arr = new Uint8Array(n);
-
-	// 	while (n--) {
-	// 		u8arr[n] = bstr.charCodeAt(n);
-	// 	}
-	// 	return new File([u8arr], filename, { type: mime });
-	// }
 
 	return (
 		<React.Fragment>
@@ -125,10 +125,13 @@ const Files = () => {
 						)}
 						<FileUploadRebuild uploadFiles={filesToUpload} acceptAll />
 
-						<div className="display">
-							{fileNames.length !== 0 && (
-								<FileDisplayList displayFiles={fileBase64} />
-							)}
+						<div className="fileDisplay center">
+							{
+								<FileDisplayList
+									filesBase64={encodedBase64}
+									fileNames={displayFileName}
+								/>
+							}
 						</div>
 					</div>
 				)

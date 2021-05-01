@@ -21,8 +21,7 @@ const ProjectFormDesign = (props) => {
 			<Formik
 				initialValues={snapshot}
 				onSubmit={handleSubmit}
-				validationSchema={currentProjectPage.props.validationSchema}
-			>
+				validationSchema={currentProjectPage.props.validationSchema}>
 				{(formik) => (
 					<div className="container center">
 						<div className="row">
@@ -34,8 +33,7 @@ const ProjectFormDesign = (props) => {
 										<span
 											className="iconify backarrow prevBtn"
 											data-icon="carbon:arrow-left"
-											data-inline="false"
-										></span>
+											data-inline="false"></span>
 									</label>
 								)}
 							</div>
@@ -63,18 +61,15 @@ const ProjectFormDesign = (props) => {
 										<span
 											className={`currentProjectPage ${
 												stepNumber === 0 && "highlight"
-											}`}
-										></span>
+											}`}></span>
 										<span
 											className={`currentProjectPage ${
 												stepNumber === 1 && "highlight"
-											}`}
-										></span>
+											}`}></span>
 										<span
 											className={`currentProjectPage ${
 												stepNumber === 2 && "highlight"
-											}`}
-										></span>
+											}`}></span>
 									</div>
 									<div className="new-project-form">
 										{/* //! this is the current Form page here */}
@@ -100,8 +95,7 @@ const ProjectFormDesign = (props) => {
 												<Button
 													//TODO RE-ENABLE DISABLED @roubzy1704
 													// disabled={!(formik.isValid && formik.dirty)}
-													type="submit"
-												>
+													type="submit">
 													{isLastStep ? "Start" : "Continue"}
 												</Button>
 											)}
