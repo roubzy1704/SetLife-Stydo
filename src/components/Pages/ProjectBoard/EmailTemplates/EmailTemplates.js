@@ -37,7 +37,7 @@ const EmailTemplates = () => {
 	const dispatch = useDispatch();
 
 	//USERID RETRIEVAL
-	// let user_id = 4;
+	// let user_id = 1;
 	const user_id = useParams().user_id; //retireve user_id from route url
 	const userEmailTemplates = useSelector((state) => state.user.emailTemplates); //retrieve email templates from store
 

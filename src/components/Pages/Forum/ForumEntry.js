@@ -4,21 +4,39 @@ import Avatar from "../../../Images/avatar.png";
 import reply from "../../../Images/Reply.png";
 import "./ForumEntry.css";
 
-const ForumEntry = () => {
+const ForumEntry = ({
+	title,
+	content,
+	tags,
+	date,
+	reply_user_id,
+	reply_date,
+}) => {
 	let author = "Hovha";
 	let location = "NY";
-	let postTitle = "Looking for a brown leather belt for 8/25/19 Vogue Shoot";
 	let number = 2;
 	let forumPostDate = "Monday 8/12/20";
+
+	console.log(date);
+	// const dateoption = {
+	// 	year:
+	// }
+
 	return (
-		<div className="forumDisplay proxima forumPost">
+		<div
+			className="forumDisplay proxima forumPost"
+			onClick={() => console.log("click")}
+			style={{ cursor: "pointer" }}>
 			<div className="row">
 				<div className="col-sm-1">
 					<img src={Avatar} alt="avatar" className="forumAvatar" />
 				</div>
-				<div className="col-sm-9 forumTitle" style={{ textAlign: "left" }}>
-					{" "}
-					{author} ({location}): {postTitle}
+				<div className="col-sm-9" style={{ textAlign: "left" }}>
+					<span class="forumTitle">
+						{author} ({location}): {title}
+					</span>
+					<br />
+					<p>{content}</p>
 				</div>
 				<div className="col-sm-2 reply">
 					<img src={reply} alt="reply" />
@@ -42,9 +60,13 @@ const ForumEntry = () => {
 				<div className="col-sm-4 left">Lar C. replied 30 min ago</div>
 				<div className="col-sm-1">&nbsp;</div>
 				<div className="col-sm-6 left">
-					<span className=" forumPostTag">Accessories</span>
-					<span className=" forumPostTag">In search of</span>
-					<span className=" forumPostTag">Skirt</span>
+					{tags.map((tag, index) => {
+						return (
+							<span className=" forumPostTag" key={index}>
+								{tag}
+							</span>
+						);
+					})}
 				</div>
 			</div>
 		</div>

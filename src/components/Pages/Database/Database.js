@@ -68,6 +68,10 @@ const Database = () => {
 		console.log(checkList);
 	};
 
+	const handleSubmit = () => {
+		console.log(checkList);
+	};
+
 	return (
 		<div className="center relative">
 			<div className="row">
@@ -201,7 +205,7 @@ const Database = () => {
 				</div>
 				<div className="col col-md-3 searchButton">
 					<span>
-						<Button>Search</Button>
+						<Button onClick={handleSubmit}>Search</Button>
 					</span>
 				</div>
 			</div>

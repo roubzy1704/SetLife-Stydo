@@ -22,6 +22,8 @@ import userReducer from "./Store/Reducers/userReducer";
 import MoodBoard from "./components/Pages/ProjectBoard/moodBoard/MoodBoard";
 import Contacts from "./components/Pages/ProjectBoard/Contacts/Contacts";
 import Requests from "./components/Pages/ProjectBoard/Requests/Requests";
+import SelectRequest from "./components/Pages/ProjectBoard/Requests/SelectRequest";
+import TagWalk from "./components/Pages/ProjectBoard/Requests/TagWalk";
 import EmailTemplates from "./components/Pages/ProjectBoard/EmailTemplates/EmailTemplates";
 import NewTemplate from "./components/Pages/ProjectBoard/EmailTemplates/NewTemplate/NewTemplate";
 import CallSheet from "./components/Pages/ProjectBoard/CallSheet/CallSheet";
@@ -113,6 +115,16 @@ function App() {
 							</Route>
 							<Route path="/ProjectBoard/:projectId/requests" exact>
 								<Requests />
+							</Route>
+							<Route
+								path="/ProjectBoard/:projectId/requests/selectRequest"
+								exact>
+								<SelectRequest />
+							</Route>
+							<Route
+								path="/ProjectBoard/:projectId/requests/selectRequest/TagWalk"
+								exact>
+								<TagWalk />
 							</Route>
 							<Route
 								path="/ProjectBoard/:projectId/:user_id/emailTemplates"

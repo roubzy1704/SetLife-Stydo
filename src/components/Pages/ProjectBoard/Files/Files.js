@@ -33,7 +33,7 @@ const Files = () => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 4;
+	let user_id = 1;
 
 	const [filesBase64ToUpload, setFileBase64ToUpload] = useState([]); //will hold files in base64 that are converted from base64 and will upload
 	const [fileNamesToUpload, setFileNamesToUpload] = useState([]); //will hold file name that are to be uploaded

@@ -21,7 +21,7 @@ const NewProjectForm = () => {
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
-	let user_id = 4;
+	let user_id = 1;
 
 	const dispatch = useDispatch();
 	const history = useHistory();

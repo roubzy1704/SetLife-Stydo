@@ -5,6 +5,8 @@ import {
 	CREATE_NEW_EMAIL_TEMPLATE,
 	DELETE_USER_EMAIL_TEMPLATE,
 	CHANGE_DEFAULT_EMAIL_TEMPLATE,
+	CREATE_NEW_FORUM_POST,
+	FETCH_FORUM_POST,
 	LOADING_USER_DATA,
 	END_LOADING,
 } from "../Action/userAction";
@@ -13,6 +15,7 @@ const initialUserState = {
 	user_id: "",
 	emailTemplates: [],
 	defaultTemplate: 8,
+	forumPost: [],
 	//auth: ""
 	//isLoggedIn : false
 	loading: false,
@@ -20,6 +23,8 @@ const initialUserState = {
 
 const userReducer = (state = initialUserState, action) => {
 	switch (action.type) {
+		//*EMAIL TEMPLATES
+
 		case FETCH_USER_EMAIL_TEMPLATES:
 			// console.log("ap ", action.payload);
 			return {
@@ -44,6 +49,29 @@ const userReducer = (state = initialUserState, action) => {
 			return {
 				...state,
 				defaultTemplate: action.payload,
+				loading: false,
+			};
+
+		//*FORUM
+
+		case CREATE_NEW_FORUM_POST:
+			let forumPost = action.payload;
+
+			let tempArray = initialUserState.forumPost;
+
+			tempArray.concat(forumPost);
+
+			return {
+				...state,
+				forumPost: tempArray,
+				loading: false,
+			};
+
+		case FETCH_FORUM_POST:
+			let userForumPost = action.payload;
+			return {
+				...state,
+				forumPost: userForumPost,
 				loading: false,
 			};
 

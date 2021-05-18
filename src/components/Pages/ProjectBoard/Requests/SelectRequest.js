@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -7,10 +7,12 @@ import { ProjectBoardPageNav } from "../../../../Shared/util/PageNavTitle";
 import { clearErrors } from "../../../../Store/Action/errorAction";
 import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
 import LoadingSpinner from "../../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
+import BrandsList from "../../../Pages/Database/brandsList";
+import Button from "../../../../Shared/UIElements/Button/Button";
 import "../../../../Shared/UIElements/Shared.css";
-import "./Contacts.css";
+import "./Requests.css";
 
-const Contacts = () => {
+const SelectRequest = () => {
 	const projectId = useParams().projectId;
 	const allProjects = useSelector((state) => state.projects.project);
 	let allUserProjects = allProjects.filter(
@@ -31,9 +33,11 @@ const Contacts = () => {
 		dispatch(fetchAllProjects(user_id));
 	}, [dispatch, user_id]);
 
-	//!have to resolve the issues with the page crashing on refresh. I did something about this in projectBoard. look at that
-	//could pass the project as a prop to modBoard?
+	const [selection, setSelection] = useState("");
 
+	const handleSelection = (name) => {
+		setSelection(name);
+	};
 	return (
 		<React.Fragment>
 			<ErrorModal
@@ -53,10 +57,24 @@ const Contacts = () => {
 						{ProjectBoardPageNav(
 							projectId,
 							userProject.projectName,
-							"Contacts",
+							"Select Request",
 							userProject.productionDate
 						)}
-						<div>{userProject.projectCreateDate}</div>
+						{/*  */}
+						{selection !== "" && (
+							<div style={{ marginBottom: "30px" }}>
+								<p>You have selected {selection}</p>
+								<Button
+									className="blue-button"
+									to={`/ProjectBoard/${projectId}/requests/selectRequest/TagWalk`}>
+									View Collection on Tag Walk
+								</Button>
+								<br />
+							</div>
+						)}
+						<div className="forumDisplay">
+							<BrandsList getSelection={handleSelection} />
+						</div>
 					</div>
 				)
 			)}
@@ -64,4 +82,4 @@ const Contacts = () => {
 	);
 };
 
-export default Contacts;
+export default SelectRequest;

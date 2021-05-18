@@ -1,8 +1,9 @@
 import React from "react";
 
-const brandsList = () => {
+const brandsList = ({ getSelection }) => {
 	function handleClick(event) {
-		console.log(event.target.id);
+		// console.log(event.target.id);
+		getSelection(event.target.id);
 	}
 	return (
 		<React.Fragment>

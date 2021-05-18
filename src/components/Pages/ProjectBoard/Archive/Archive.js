@@ -25,7 +25,7 @@ const Archive = () => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 4;
+	let user_id = 1;
 
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));

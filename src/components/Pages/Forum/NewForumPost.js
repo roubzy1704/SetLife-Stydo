@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
+import { newForumPost } from "../../../Store/Action/userAction";
 import Button from "../../../Shared/UIElements/Button/Button";
 
 const NewForumPost = () => {
-	const [postTitle, setPostTitle] = useState("");
-	const [postText, setPostText] = useState("");
+	const [postTitle, setPostTitle] = useState("My First Post");
+	const [postText, setPostText] = useState("Post Content");
 	const [options, setOptions] = useState({
 		all: false,
 		accessories: false,
@@ -31,6 +33,9 @@ const NewForumPost = () => {
 	};
 
 	const history = useHistory();
+	const dispatch = useDispatch();
+
+	let user_id = 1;
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -40,12 +45,16 @@ const NewForumPost = () => {
 		for (const [key, value] of Object.entries(options)) {
 			if (value === true) selectedTags.push(key);
 		}
-		console.log(
-			"submit",
-			e.target.postTitle.value,
-			e.target.postText.value,
-			selectedTags
+
+		dispatch(
+			newForumPost(
+				user_id,
+				e.target.postTitle.value,
+				e.target.postText.value,
+				selectedTags
+			)
 		);
+
 		setPostText("");
 		setPostTitle("");
 
@@ -87,6 +96,7 @@ const NewForumPost = () => {
 										name="postTitle"
 										value={postTitle}
 										onChange={textChange}
+										required
 									/>
 								</div>
 
@@ -96,7 +106,8 @@ const NewForumPost = () => {
 									placeholder="Enter Post here"
 									name="postText"
 									value={postText}
-									onChange={textChange}></textarea>
+									onChange={textChange}
+									required></textarea>
 
 								<h5 style={{ paddingTop: "20px" }}>Select Tags</h5>
 

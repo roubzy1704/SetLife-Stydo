@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -9,6 +9,7 @@ import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
 import LoadingSpinner from "../../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 import "../../../../Shared/UIElements/Shared.css";
 import "./Requests.css";
+import Button from "../../../../Shared/UIElements/Button/Button";
 
 const Requests = () => {
 	const projectId = useParams().projectId;
@@ -25,7 +26,7 @@ const Requests = () => {
 	};
 
 	const dispatch = useDispatch();
-	let user_id = 4;
+	let user_id = 1;
 
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
@@ -53,10 +54,33 @@ const Requests = () => {
 						{ProjectBoardPageNav(
 							projectId,
 							userProject.projectName,
-							"Requests",
+							"Request And Confirm Looks",
 							userProject.productionDate
 						)}
-						<div>{userProject.projectCreateDate}</div>
+						<Button
+							className="blue-button"
+							to={`/ProjectBoard/${projectId}/requests/selectRequest`}>
+							Request Looks
+						</Button>
+						<div className="row" style={{ marginTop: "30px" }}>
+							<div className="col-md-5">
+								REQUESTED
+								<div>
+									Requsted Images Requsted Images Requsted Images Requsted
+									Images
+								</div>
+								Requsted Images Requsted Images Requsted Images Requsted Images
+								Requsted Images Requsted Images Requsted Images Requsted Images
+								Requsted Images Requsted Images
+							</div>
+							<div className="col-md-2">
+								<hr className="straightLine" />
+								<hr className="straightLineTwo" />
+							</div>
+							<div className="col-md-5">
+								CONFIRMED<div>Confimred Images</div>
+							</div>
+						</div>
 					</div>
 				)
 			)}

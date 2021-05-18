@@ -63,6 +63,7 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 			//this check for statusText is to prevent an issue that occurs when there are no projects but the
 			//page displays an error received from the server, since there is not need to show an error saying
 			///user project doesnot exist, I just check to see if that server error happens and ignore it
+			console.log(err);
 			err.response.statusText !== "NOT FOUND" &&
 				dispatch(
 					setErrors(err.response.data.message, err.response.status, true)
@@ -71,136 +72,133 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 		});
 };
 
-export const createNewProject = (values, filesBase64, fileNames, user_id) => (
-	dispatch
-) => {
-	dispatch(setLoadingProject());
-	console.log(filesBase64, fileNames);
+export const createNewProject =
+	(values, filesBase64, fileNames, user_id) => (dispatch) => {
+		dispatch(setLoadingProject());
+		console.log(filesBase64, fileNames);
 
-	axios({
-		url: "http://localhost:5000/projects",
-		method: "POST",
-		headers: {
-			accept: "application/json",
-			"Content-Type": "application/json",
-		},
-		data: {
-			name: values.projectName,
-			client: values.client,
-			production_date: values.productionDate,
-			description: values.aboutProject || "",
-			mood_images: filesBase64,
-			mood_image_names: fileNames,
-			contacts: [], //!contacts will be removed later, as it is not collected when creating a project
-			user_id: user_id,
-		},
-	})
-		.then((res) => {
-			console.log(res.data.data);
-			dispatch({
-				type: CREATE_NEW_PROJECT,
-				payload: {
-					projectName: res.data.data.created_data.name,
-					client: res.data.data.created_data.client,
-					productionDate: res.data.data.created_data.production_date,
-					aboutProject: res.data.data.created_data.description,
-					moodBoardImages: res.data.data.created_data.mood_images,
-					moodBoardImageName: res.data.data.created_data.mood_image_names,
-					// projectCreateDate: res.data.data.created_data.production_date, //TODO this shoould be changed to include created Date
-					projectId: res.data.data.created_data.id,
-				},
-			});
+		axios({
+			url: "http://localhost:5000/projects",
+			method: "POST",
+			headers: {
+				accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			data: {
+				name: values.projectName,
+				client: values.client,
+				production_date: values.productionDate,
+				description: values.aboutProject || "",
+				mood_images: filesBase64,
+				mood_image_names: fileNames,
+				contacts: [], //!contacts will be removed later, as it is not collected when creating a project
+				user_id: user_id,
+			},
 		})
-		.catch((err) => {
-			console.log(err);
-			dispatch(setErrors(err.response.data.message, err.response.status, true));
-			dispatch(endLoading());
-		});
-};
-
-export const updateAProject = (
-	projectId,
-	user_id,
-	filesBase64,
-	fileNames,
-	patchRequestType
-) => (dispatch) => {
-	dispatch(setLoadingProject());
-	console.log("update, ", filesBase64, fileNames);
-	let requestBody = {};
-
-	if (patchRequestType === "moodboard") {
-		requestBody = {
-			user_id: user_id,
-			project_id: projectId,
-			mood_images: filesBase64,
-			mood_image_name: fileNames,
-		};
-	} else if (patchRequestType === "files") {
-		requestBody = {
-			user_id: user_id,
-			project_id: projectId,
-			files_data: filesBase64,
-			files_data_name: fileNames,
-		};
-	} else if (patchRequestType === "receipts") {
-		requestBody = {
-			user_id: user_id,
-			project_id: projectId,
-			mood_images: filesBase64,
-			mood_image_name: fileNames,
-		};
-	} else if (patchRequestType === "callsheet") {
-		requestBody = {
-			user_id: user_id,
-			project_id: projectId,
-			mood_images: filesBase64,
-			mood_image_name: fileNames,
-		};
-	}
-
-	axios({
-		url: `http://localhost:5000/projects/${patchRequestType}`,
-		method: "patch",
-		headers: {
-			"Content-Type": "application/json;charset=utf-8",
-		},
-		data: JSON.stringify(requestBody),
-	})
-		.then((res) => {
-			console.log(res.data.data);
-			let fileData = "",
-				fileName = "";
-
-			if (patchRequestType === "moodboard") {
-				fileData = res.data.data[0].mood_images;
-				fileName = res.data.data[0].mood_image_names;
-			} else if (patchRequestType === "files") {
-				fileData = res.data.data.files_data;
-				// fileName = res.data.data.fileNames;
-			} else if (patchRequestType === "receipts") {
-				fileData = res.data.data[0].filesBase64;
-				fileName = res.data.data[0].fileNames;
-			} else if (patchRequestType === "callsheet") {
-				fileData = res.data.data[0].filesBase64;
-				fileName = res.data.data[0].fileNames;
-			}
-			dispatch({
-				type: UPDATE_A_PROJECT,
-				payload: {
-					file_data: fileData,
-					file_names: fileName,
-					projectId: projectId,
-					patchRequestType,
-				},
+			.then((res) => {
+				console.log(res.data.data);
+				dispatch({
+					type: CREATE_NEW_PROJECT,
+					payload: {
+						projectName: res.data.data.created_data.name,
+						client: res.data.data.created_data.client,
+						productionDate: res.data.data.created_data.production_date,
+						aboutProject: res.data.data.created_data.description,
+						moodBoardImages: res.data.data.created_data.mood_images,
+						moodBoardImageName: res.data.data.created_data.mood_image_names,
+						// projectCreateDate: res.data.data.created_data.production_date, //TODO this shoould be changed to include created Date
+						projectId: res.data.data.created_data.id,
+					},
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+				dispatch(
+					setErrors(err.response.data.message, err.response.status, true)
+				);
+				dispatch(endLoading());
 			});
+	};
+
+export const updateAProject =
+	(projectId, user_id, filesBase64, fileNames, patchRequestType) =>
+	(dispatch) => {
+		dispatch(setLoadingProject());
+		console.log("update, ", filesBase64, fileNames);
+		let requestBody = {};
+
+		if (patchRequestType === "moodboard") {
+			requestBody = {
+				user_id: user_id,
+				project_id: projectId,
+				mood_images: filesBase64,
+				mood_image_name: fileNames,
+			};
+		} else if (patchRequestType === "files") {
+			requestBody = {
+				user_id: user_id,
+				project_id: projectId,
+				files_data: filesBase64,
+				files_data_name: fileNames,
+			};
+		} else if (patchRequestType === "receipts") {
+			requestBody = {
+				user_id: user_id,
+				project_id: projectId,
+				mood_images: filesBase64,
+				mood_image_name: fileNames,
+			};
+		} else if (patchRequestType === "callsheet") {
+			requestBody = {
+				user_id: user_id,
+				project_id: projectId,
+				mood_images: filesBase64,
+				mood_image_name: fileNames,
+			};
+		}
+
+		axios({
+			url: `http://localhost:5000/projects/${patchRequestType}`,
+			method: "patch",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
+			},
+			data: JSON.stringify(requestBody),
 		})
-		.catch((err) => {
-			console.log(err);
-			dispatch(setErrors(err, "404", true));
-			dispatch(endLoading());
-		});
-};
+			.then((res) => {
+				console.log(res.data.data);
+				let fileData = "",
+					fileName = "";
+
+				if (patchRequestType === "moodboard") {
+					fileData = res.data.data[0].mood_images;
+					fileName = res.data.data[0].mood_image_names;
+				} else if (patchRequestType === "files") {
+					fileData = res.data.data.files_data;
+					// fileName = res.data.data.fileNames;
+				} else if (patchRequestType === "receipts") {
+					fileData = res.data.data[0].filesBase64;
+					fileName = res.data.data[0].fileNames;
+				} else if (patchRequestType === "callsheet") {
+					fileData = res.data.data[0].filesBase64;
+					fileName = res.data.data[0].fileNames;
+				}
+				dispatch({
+					type: UPDATE_A_PROJECT,
+					payload: {
+						file_data: fileData,
+						file_names: fileName,
+						projectId: projectId,
+						patchRequestType,
+					},
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+				dispatch(setErrors(err, "404", true));
+				dispatch(endLoading());
+			});
+	};
 
 export const deleteAProject = (projectId, user_id) => (dispatch) => {
 	dispatch(setLoadingProject());

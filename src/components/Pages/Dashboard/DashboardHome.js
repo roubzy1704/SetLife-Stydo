@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllProjects } from "../../../Store/Action/projectAction";
 import { clearErrors } from "../../../Store/Action/errorAction";
 import ProjectList from "../../Pages/Project/ProjectList";
+import ForumList from "../Forum/ForumList";
 import DashBoardList from "./DashBoardList";
+import brandsList from "../Database/brandsList";
 import Button from "../../../Shared/UIElements/Button/Button";
 import LoadingSpinner from "../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 import ErrorModal from "../../../Shared/UIElements/ErrorModal/ErrorModal";
@@ -13,6 +15,7 @@ import "../../../Shared/UIElements/Shared.css";
 
 const DashboardHome = (props) => {
 	const projectList = useSelector((state) => state.projects.project);
+	const userForumPost = useSelector((state) => state.user.forumPost);
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
@@ -22,7 +25,7 @@ const DashboardHome = (props) => {
 		dispatch(clearErrors());
 	};
 
-	let user_id = 4;
+	let user_id = 1;
 
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
@@ -92,7 +95,7 @@ const DashboardHome = (props) => {
 								<hr className="horizontalLine" />
 							</div>
 							{/* //*column to hold Forum on dashboard */}
-							<div className="row-sm-2 dashboardForumTab dashboardDatabaseTitle proxima">
+							<div className="row-sm-2 dashboardForumTab dashboardForumTitle proxima">
 								FORUM{" "}
 								<Button to="/forum">
 									<span
@@ -103,7 +106,9 @@ const DashboardHome = (props) => {
 										data-width="40"
 										data-height="40"></span>
 								</Button>
-								<div className="forum"></div>
+							</div>
+							<div className="forum">
+								<ForumList userForumPost={userForumPost} dashboard />
 							</div>
 						</div>
 					</div>

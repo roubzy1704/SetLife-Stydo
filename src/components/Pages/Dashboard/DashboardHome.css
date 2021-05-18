@@ -1,5 +1,6 @@
 .dashboardProjectTitle,
-.dashboardDatabaseTitle {
+.dashboardDatabaseTitle,
+.dashboardForumTitle {
 	padding: 5px 0px;
 	font-style: normal;
 	font-weight: 800;
@@ -79,9 +80,8 @@
 .forum {
 	/* justify-items: center; */
 	width: 70%;
-	height: 20vh;
 	margin: 0 auto;
-	background-color: #f4eaea;
+	/* background-color: #f4eaea; */
 }
 
 .cross {
