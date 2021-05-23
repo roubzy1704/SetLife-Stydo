@@ -28,36 +28,42 @@ export const fetchAllProjects = (user_id) => (dispatch) => {
 		params: { user_id: user_id },
 	})
 		.then((res) => {
-			const response = res.data.data;
-			console.log("fetch ", response);
+			const response = res.data.res.all_user_projects;
+			const testing = res.data.testing;
+			console.log(response);
 			let userProjects = [];
 			userProjects = response.map((project, index) => {
 				return {
 					projectName: project.name,
 					client: project.client,
 					productionDate: project.production_date,
-					aboutProject: project.description,
+					// 		aboutProject: project.description,
 					projectId: project.id,
-					moodBoardImages: project.mood_images,
-					moodBoardImageName: project.mood_image_names,
-					// projectCreateDate: new Date().toLocaleDateString("en-US", options), //TODO is not sent to me in response, will have to ask what the date in the project is about
-					projectCreateDate: index, //TODO remove when done
-					files: project.files,
+					// 		moodBoardImages: project.mood_images,
+					// 		moodBoardImageName: project.mood_image_names,
+					projectCreateDate: project.created_timestamp,
+					// 		files: project.files,
 					notes: project.notes,
-					callSheet: project.call_sheet,
-					contacts: project.contacts,
-					budgetReceipts: project.receipts,
-					//pullInventory: [], //? no route for this
-					//confirmedImages: project.confirmed_images //TODO integrate this
-					//requestImages: project.request_images //TODO integrate this
-					//looks : project.looks //TODO integrate this
+					// 		callSheet: project.call_sheet,
+					// 		contacts: project.contacts,
+					// 		budgetReceipts: project.receipts,
+					// 		//pullInventory: [], //? no route for this
+					// 		//confirmedImages: project.confirmed_images //TODO integrate this
+					// 		//requestImages: project.request_images //TODO integrate this
+					// 		//looks : project.looks //TODO integrate this
+					//!new info
+					connected_press_contacts: project.connected_press_contacts,
+					connected_user_contacts: project.connected_user_contacts,
+					defaultTemplate: project.default_template,
+					updated_timestamp: project.updated_timestamp,
+					user_id: project.user_id,
 				};
 			});
 
-			dispatch({
-				type: FETCH_ALL_PROJECTS,
-				payload: userProjects,
-			});
+			// dispatch({
+			// 	type: FETCH_ALL_PROJECTS,
+			// 	payload: userProjects,
+			// });
 		})
 		.catch((err) => {
 			//this check for statusText is to prevent an issue that occurs when there are no projects but the

@@ -5,7 +5,7 @@ import ForumEntry from "./ForumEntry";
 const ForumList = ({ userForumPost, dashboard }) => {
 	if (!userForumPost.length) {
 		return (
-			<div class="proxima" style={{ fontSize: "30px" }}>
+			<div className="proxima" style={{ fontSize: "30px" }}>
 				<p>No Post, Create One</p>
 				<p>Or Browse the Forums</p>
 			</div>
