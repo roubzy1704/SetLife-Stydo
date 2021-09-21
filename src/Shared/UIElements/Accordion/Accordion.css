@@ -1,0 +1,36 @@
+.accordion {
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+  
+  .accordion-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #afdae7;
+    border: 2px solid rgb(228, 223, 223);
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+    padding: 1rem;
+  }
+  
+  .accordion-title:hover {
+    background-color: #88c5da;
+    transition: 0.5s linear;
+  }
+  
+
+  .accordion-content {
+    padding: 1rem;
+    border-left: 1px solid #88c5da;
+    border-right: 1px solid #88c5da;
+    border-bottom: 1px solid #88c5da;
+  }
+  
+  .accordion-content {
+    background-color: #ffffff;
+  }
+
+  .accordion-content .card{
+      margin-bottom: 15px;
+  }

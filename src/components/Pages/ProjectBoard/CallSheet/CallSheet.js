@@ -1,28 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchAllProjects } from "../../../../Store/Action/projectAction";
+import {
+	fetchProjectBoard,
+	updateProjectBoard,
+} from "../../../../Store/Action/projectBoardAction";
 import { ProjectBoardPageNav } from "../../../../Shared/util/PageNavTitle";
 import { clearErrors } from "../../../../Store/Action/errorAction";
 import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
 import LoadingSpinner from "../../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
-import FileUpload from "../../../../Shared/components/FileUpload/FileUpload";
-import Button from "../../../../Shared/UIElements/Button/Button";
+import FileUploadRebuild from "../../../../Shared/components/FileUploadRebuild/FileUploadRebuild";
+import FileDisplayList from "../../../../Shared/UIElements/FileDisplay/FileDisplayList";
 import "../../../../Shared/UIElements/Shared.css";
 import "./CallSheet.css";
 
 const CallSheet = () => {
+	//TODO SET IMAGE DISPLAY ON FILES, AFTER I RESOLVE UPLOAD OST REQUEST ISSUE
 	const projectId = useParams().projectId;
 	const allProjects = useSelector((state) => state.projects.project);
 	let allUserProjects = allProjects.filter(
 		(proj) => proj.projectId === parseInt(projectId)
 	);
 	let userProject = allUserProjects[0];
+
+	const callSheetData = useSelector((state) => state.projectBoard.callsheet);
+
+	console.log(callSheetData);
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
-
-	const [callSheets, setCallSheet] = useState([]);
 
 	const clearError = () => {
 		dispatch(clearErrors());
@@ -31,44 +38,43 @@ const CallSheet = () => {
 	const dispatch = useDispatch();
 	let user_id = 1;
 
+	const [filesBase64ToUpload, setFileBase64ToUpload] = useState([]); //will hold files in base64 that are converted from base64 and will upload
+	const [fileNamesToUpload, setFileNamesToUpload] = useState([]); //will hold file name that are to be uploaded
+
 	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
 	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
-	}, [dispatch, user_id]);
+		dispatch(fetchProjectBoard(user_id, projectId, "callsheet"));
+	}, [dispatch, user_id, projectId]);
 
-	//will hold the files upload by user
-	//I have to use the useRef hook here because I want the image files to be saved here, when i call
-	//the handleSubmit function. If not the handelSubmit function will send fileSave as an empty array
-	//So I am creating a refrence for fileSave to return a mutable ref object whose .current property is initilaized to the passed argument
-	let fileSave = useRef([]);
-
-	const allFiles = (files) => {
-		//now because of the useRef hook, every time I drag and drop a file, a new array is pushed to files
-		//so files now looks like an array of arrays, with the last array in the array holding my last file upload
-		//this will be resolved in the projectAction component, I will take the last array in the element for submission
-		fileSave.current.push(files);
-		// console.log(fileSave.current);
-		//i have to save the files in a variable, and cant do it like below using setState
-		//because in react we cant use setState on a component (NewProjectForm)
-		//while rendering another component (FileUpload)
-		// setProjectImages((prevFiles) => [...prevFiles, files]);
-	};
-
-	//we need this useEffect to save the fileupload data in image state here
-	//because if we dont do that we get an error that a component cant update while rendering a different component warning
-	//this useEffect solves that. by running it when the data changes and not on every component update
 	useEffect(() => {
-		setCallSheet(fileSave.current);
-	}, []);
+		//if there are images to upload (filesBase64ToUpload/fileNamesToUpload), then run this useEffect block to dispatch updateAproject
+		if (filesBase64ToUpload.length !== 0 && fileNamesToUpload.length !== 0) {
+			dispatchStore();
 
-	const handleUpload = () => {
-		if (callSheets.length <= 0) {
-			console.log("Nothing to submit");
-		} else {
-			console.log("I will submit callSheets");
-			console.log(callSheets[callSheets.length - 1]);
+			//reset filesBase64ToUpload and fileNamesToUpload
+			setFileBase64ToUpload([]);
+			setFileNamesToUpload([]);
 		}
+	}, [dispatch, filesBase64ToUpload, fileNamesToUpload]);
+
+	const dispatchStore = useCallback(() => {
+		dispatch(
+			//TODO THERE IS AN ERROR UPLAODING CALLSHEET, HAVE TO CHECK WITH TOMMY, CHECK PROJECTBOARD ACTION FOR DETAILS
+			updateProjectBoard(
+				user_id,
+				projectId,
+				"callsheets",
+				filesBase64ToUpload,
+				fileNamesToUpload
+			)
+		);
+	}, [filesBase64ToUpload, fileNamesToUpload, projectId, user_id, dispatch]);
+
+	const filesToUpload = (filesInB64, file_Names) => {
+		setFileBase64ToUpload(filesInB64);
+		setFileNamesToUpload(file_Names);
 	};
 
 	return (
@@ -79,7 +85,7 @@ const CallSheet = () => {
 				statusCode={error.statusCode}
 				onClear={clearError}
 			/>
-			{isLoading || userProject === undefined ? (
+			{isLoading || userProject === undefined || callSheetData === undefined ? (
 				<div className="center drop">
 					<LoadingSpinner />
 				</div>
@@ -90,13 +96,14 @@ const CallSheet = () => {
 						{ProjectBoardPageNav(
 							projectId,
 							userProject.projectName,
-							"CallSheet",
+							"Call Sheet",
 							userProject.productionDate
 						)}
-						<FileUpload allFiles={allFiles} acceptAll />
-						<Button type="submit" onClick={handleUpload}>
-							Upload
-						</Button>
+						<FileUploadRebuild uploadFiles={filesToUpload} acceptAll />
+
+						<div className="fileDisplay center">
+							{<FileDisplayList fileData={callSheetData} callsheet />}
+						</div>
 					</div>
 				)
 			)}

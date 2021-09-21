@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -9,8 +9,24 @@ import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
 import LoadingSpinner from "../../../../Shared/UIElements/LoadingSpinner/LoadingSpinner";
 import BrandsList from "../../../Pages/Database/brandsList";
 import Button from "../../../../Shared/UIElements/Button/Button";
+import FileUploadRebuild from "../../../../Shared/components/FileUploadRebuild/FileUploadRebuild";
 import "../../../../Shared/UIElements/Shared.css";
 import "./Requests.css";
+
+import { DndProvider, DndContext } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Frame, { FrameContext } from "react-frame-component";
+
+const DndFrame = ({ children }) => {
+	const { dragDropManager } = useContext(DndContext);
+	const { window } = useContext(FrameContext);
+
+	useEffect(() => {
+		dragDropManager.getBackend().addEventListeners(window);
+	});
+
+	return children;
+};
 
 const TagWalk = () => {
 	const projectId = useParams().projectId;
@@ -21,6 +37,14 @@ const TagWalk = () => {
 	let userProject = allUserProjects[0];
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
+
+	const tagSelection = useParams().selection.toLowerCase();
+
+	console.log(tagSelection);
+
+	console.log(
+		`https://www.tag-walk.com/en/look/search?designer=${tagSelection}&page=1`
+	);
 
 	const clearError = () => {
 		dispatch(clearErrors());
@@ -69,7 +93,27 @@ const TagWalk = () => {
 								<br />
 							</div>
 						)}
-						<div className="forumDisplay"></div>
+						<div className="forumDisplay">
+							<DndProvider backend={HTML5Backend}>
+								<FileUploadRebuild />
+								<Frame
+									style={{
+										width: "100%",
+										height: 600,
+										// textAlign: "center",
+									}}>
+									<DndFrame>
+										<iframe
+											// src="https://www.tag-walk.com/en/look/search?designer=louis-vuitton&page=1"
+											src={`https://www.tag-walk.com/en/look/search?designer=${tagSelection}&page=1`}
+											title={tagSelection}
+											width="100%"
+											height="600px"
+										/>
+									</DndFrame>
+								</Frame>
+							</DndProvider>
+						</div>
 					</div>
 				)
 			)}

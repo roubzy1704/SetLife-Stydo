@@ -82,7 +82,7 @@ const DashboardHome = (props) => {
 												<DashBoardList dashboard="true" />
 											</h5>
 											<div className=" project-btn-grp">
-												<Button to="/database" className="blue-button">
+												<Button to={"/database/" + user_id} className="blue-button">
 													See More
 												</Button>
 											</div>

@@ -15,7 +15,6 @@ import "./EmailTemplates.css";
 
 const EmailTemplates = () => {
 	//PROJECTID RETRIEVAL,AND SETUP USAGE FOR PAGENAV
-
 	const projectId = useParams().projectId; //retrieve projectId from url route
 	const allProjects = useSelector((state) => state.projects.project); //retireve allProjects from store
 	//find project in store that matches projectId

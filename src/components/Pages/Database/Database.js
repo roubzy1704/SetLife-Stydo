@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
 
 import BrandsList from "./brandsList";
 import Button from "../../../Shared/UIElements/Button/Button";
@@ -6,6 +7,12 @@ import Button from "../../../Shared/UIElements/Button/Button";
 import "./Database.css";
 
 const Database = () => {
+
+		//USERID RETRIEVAL
+	// let user_id = 1;
+	const user_id = useParams().user_id; //retireve user_id from route url
+
+
 	const [checkList, setCheckList] = useState({
 		womenswear: false,
 		menswear: false,
@@ -71,6 +78,12 @@ const Database = () => {
 	const handleSubmit = () => {
 		console.log(checkList);
 	};
+
+	const history = useHistory();
+
+	const handleSelection = (name) => {
+		history.push(`/database/${user_id}/${name}`)
+	}
 
 	return (
 		<div className="center relative">
@@ -210,7 +223,7 @@ const Database = () => {
 				</div>
 			</div>
 			{/* BRANDS */}
-			<BrandsList />
+			<BrandsList getSelection={handleSelection} database/>
 		</div>
 	);
 };

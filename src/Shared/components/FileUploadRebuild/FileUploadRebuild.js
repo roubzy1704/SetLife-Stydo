@@ -19,6 +19,12 @@ import Button from "../../UIElements/Button/Button";
 import dragDrop from "../../../Images/dragdrop.png";
 import trashCan from "../../../Images/trashCan.png";
 import "../FileUpload/FileUpload.css";
+import $ from "jquery";
+
+$("#upload").on(function () {
+	console.lot("trigger");
+	$("#testContinue").trigger();
+});
 
 const FileUploadRebuild = (props) => {
 	const [selectedFiles, setSelectedFiles] = useState([]); //will hold all upload files to display
@@ -258,15 +264,29 @@ const FileUploadRebuild = (props) => {
 		let trimmedFiles = [...new Set(filesBase64)];
 		props.uploadFiles(trimmedFiles, fileName);
 
-		// props.uploadFiles(filesBase64, fileName);
-
 		validFiles.length = 0;
 		setValidFiles([...validFiles]);
 		setSelectedFiles([...validFiles]);
 		setUnsupportedFiles([...validFiles]);
 		setFileName([...validFiles]);
 		setFilesBase64([...validFiles]);
+
+		//trigger the hidden btn in other to progress the form on new project
+		//but skip for others like files, callsheet, budgetReceipts
+		if (!props.acceptAll) {
+			inputRef.current.click();
+		}
 	}
+
+	function handleUploadSkip() {
+		let trimmedFiles = [...new Set(filesBase64)];
+		props.uploadFiles(trimmedFiles, fileName);
+		//trigger the hidden btn in other to submit the form
+		inputRef.current.click();
+	}
+
+	//ref function to trigger the hidden btn, scroll to end of page to learn more
+	const inputRef = React.useRef(null);
 
 	return (
 		<React.Fragment>
@@ -332,14 +352,30 @@ const FileUploadRebuild = (props) => {
 					<div>
 						<h5>Please remove unsupported file(s)</h5>
 					</div>
-				) : validFiles.length > 0 ? (
-					<div className="center">
-						<Button type="submit" onClick={handleUpload}>
-							<Upload color="green" size={36} /> Upload
-						</Button>
-					</div>
-				) : null}
+				) : (
+					validFiles.length > 0 && (
+						<div className="center">
+							<Button type="submit" onClick={handleUpload}>
+								<Upload color="green" size={36} /> Upload
+							</Button>
+						</div>
+					)
+				)}
 			</div>
+			{/* if this is rendered in new project, then show the skip button and hidden upload prevBtn
+			the upload btn is triggered by a ref function called inputRef, since we cant use click event to trigger the btn
+			also the issue was the upload btn was not triggering the next step since it was inside
+		a conditional block, so after the handleUpload function is called I will trigger the ref thru current.click(), same for skip btn */}
+			{props.skipBtn && (
+				<React.Fragment>
+					<button className="upload d-none" type="submit" ref={inputRef}>
+						Hidden
+					</button>
+					<Button type="submit" onClick={handleUploadSkip}>
+						Skip
+					</Button>
+				</React.Fragment>
+			)}
 		</React.Fragment>
 	);
 };

@@ -46,7 +46,7 @@ const ModalOverlay = (props) => {
 						</div>
 						<footer className={`modal__footer ${props.footerClass}`}>
 							<Button
-								type="button"
+								type="submit"
 								onClick={props.onClear}
 								//dont disable button if errorOnly, else disable based on input
 								disabled={

@@ -12,7 +12,7 @@ const TemplateEntry = (props) => {
 
 	const defaultTemplate = useSelector((state) => state.user.defaultTemplate);
 
-	//TODO i have to get project_id for now but tell Tommy to remove this requirement for patching default template
+	//TODO GET DEFAULT TEMPLATE TO PROJECT UPDATE ACTION
 	//TODO add default Checked
 	//TODO make template list responsive
 

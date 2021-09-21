@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import { fetchAllProjects } from "../../../../Store/Action/projectAction";
 import {
-	fetchAllProjects,
-	updateAProject,
-} from "../../../../Store/Action/projectAction";
+	fetchProjectBoard,
+	updateProjectBoard,
+} from "../../../../Store/Action/projectBoardAction";
 import { ProjectBoardPageNav } from "../../../../Shared/util/PageNavTitle";
 import { clearErrors } from "../../../../Store/Action/errorAction";
 import ErrorModal from "../../../../Shared/UIElements/ErrorModal/ErrorModal";
@@ -25,6 +26,10 @@ const Files = () => {
 		(proj) => proj.projectId === parseInt(projectId)
 	);
 	let userProject = allUserProjects[0];
+
+	const fileData = useSelector((state) => state.projectBoard.files);
+
+	console.log(fileData);
 	const error = useSelector((state) => state.error.error);
 	const isLoading = useSelector((state) => state.projects.loading);
 
@@ -38,29 +43,12 @@ const Files = () => {
 	const [filesBase64ToUpload, setFileBase64ToUpload] = useState([]); //will hold files in base64 that are converted from base64 and will upload
 	const [fileNamesToUpload, setFileNamesToUpload] = useState([]); //will hold file name that are to be uploaded
 
-	console.log("userProject Files  ", userProject);
-
-	const [encodedBase64, setEncodedBase64] = useState([]); //holds fetched project files
-	const [displayFileName, setDisplayFileName] = useState([]); //holds fetched project file names
-
 	//this useEffect helps repopulate the page when refreshed, if this use effect is absent and userProject === undefined
 	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
-	}, [dispatch, user_id]);
-
-	const history = useHistory();
-
-	useEffect(() => {
-		//if userProject exist
-		if (userProject) {
-			if (userProject.files.length !== 0) {
-				console.log("files in FIles ", userProject.files);
-				setEncodedBase64(userProject.files);
-				setDisplayFileName(userProject.filesName);
-			}
-		}
-	}, [userProject]);
+		dispatch(fetchProjectBoard(user_id, projectId, "files"));
+	}, [dispatch, user_id, projectId]);
 
 	useEffect(() => {
 		//if there are images to upload (filesBase64ToUpload/fileNamesToUpload), then run this useEffect block to dispatch updateAproject
@@ -70,33 +58,22 @@ const Files = () => {
 			//reset filesBase64ToUpload and fileNamesToUpload
 			setFileBase64ToUpload([]);
 			setFileNamesToUpload([]);
-
-			if (!isLoading) {
-				history.goBack();
-			}
 		}
 	}, [dispatch, filesBase64ToUpload, fileNamesToUpload]);
 
 	const dispatchStore = useCallback(() => {
 		dispatch(
-			updateAProject(
-				projectId,
+			updateProjectBoard(
 				user_id,
+				projectId,
+				"files",
 				filesBase64ToUpload,
-				fileNamesToUpload,
-				"files"
+				fileNamesToUpload
 			)
 		);
 	}, [filesBase64ToUpload, fileNamesToUpload, projectId, user_id, dispatch]);
 
-	/*
-
-	FILE BODY 
-
-	*/
-
 	const filesToUpload = (filesInB64, file_Names) => {
-		console.log(filesInB64, file_Names);
 		setFileBase64ToUpload(filesInB64);
 		setFileNamesToUpload(file_Names);
 	};
@@ -109,7 +86,7 @@ const Files = () => {
 				statusCode={error.statusCode}
 				onClear={clearError}
 			/>
-			{isLoading || userProject === undefined ? (
+			{isLoading || userProject === undefined || fileData === undefined ? (
 				<div className="center drop">
 					<LoadingSpinner />
 				</div>
@@ -126,12 +103,7 @@ const Files = () => {
 						<FileUploadRebuild uploadFiles={filesToUpload} acceptAll />
 
 						<div className="fileDisplay center">
-							{
-								<FileDisplayList
-									filesBase64={encodedBase64}
-									fileNames={displayFileName}
-								/>
-							}
+							{<FileDisplayList fileData={fileData} files />}
 						</div>
 					</div>
 				)

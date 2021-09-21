@@ -5,6 +5,7 @@ import "./navbar.css";
 import Avatar from "../../Images/avatar.png";
 
 const navbar = (props) => {
+	//TODO USER ID CONTEXT FOR DATABASE NAVLINK
 	return (
 		<React.Fragment>
 			<nav className="navbar navbar-expand-lg navbar-light bg-white">
@@ -40,7 +41,7 @@ const navbar = (props) => {
 							</NavLink>
 						</li>
 						<li className="nav-item">
-							<NavLink to="/database" className="nav-link " exact>
+							<NavLink to="/database/:user_id" className="nav-link " exact>
 								Database
 							</NavLink>
 						</li>

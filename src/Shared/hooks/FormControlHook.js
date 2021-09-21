@@ -7,7 +7,7 @@ const FormControlHook = ({
 	onSubmit,
 	formType,
 	children,
-	toggleContBtn,
+	// toggleContBtn,
 }) => {
 	const [stepNumber, setStepNumber] = useState(0);
 	const steps = React.Children.toArray(children);
@@ -50,7 +50,7 @@ const FormControlHook = ({
 				previous={previous}
 				isLastStep={isLastStep}
 				next={next}
-				toggleContBtn={toggleContBtn}
+				// toggleContBtn={toggleContBtn}
 			/>
 		);
 	} else {

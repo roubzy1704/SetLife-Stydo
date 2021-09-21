@@ -13,11 +13,16 @@ export const FETCH_FORUM_POST = "FETCH_FORUM_POST";
 export const LOADING_USER_DATA = "LOADING_USER_DATA";
 export const END_LOADING = "END_LOADING";
 
-/*********
+/***********************
+ * USER AUTHENTICATION *
+ **********************/
+
+/******************
  * EMAIL TEMPLATE *
- *********/
+ *****************/
 
 export const createNewEmailTemplate = (user_id, templateData) => (dispatch) => {
+	console.log(user_id, templateData);
 	dispatch(setLoading());
 	axios({
 		url: "http://localhost:5000/templates",
@@ -27,24 +32,27 @@ export const createNewEmailTemplate = (user_id, templateData) => (dispatch) => {
 			"Content-Type": "application/json",
 		},
 		data: JSON.stringify({
-			template_data: templateData,
 			user_id: user_id,
+			request_data: {
+				template_name: templateData.name,
+				body: templateData.body,
+			},
 		}),
 	})
 		.then((res) => {
-			// console.log(res.data.data);
-			dispatch({
-				type: CREATE_NEW_EMAIL_TEMPLATE,
-				payload: {
-					templateData: res.data.data,
-				},
-			});
+			console.log(res);
+			// dispatch({
+			// 	type: CREATE_NEW_EMAIL_TEMPLATE,
+			// 	payload: {
+			// 		templateData: res.data.all_templates,
+			// 	},
+			// });
+
+			dispatch(endLoading());
 		})
 		.catch((err) => {
 			console.log(err);
-			dispatch(
-				setErrors(err.response.data.message[0], err.response.data.error, true)
-			);
+			dispatch(setErrors("Something went wrong", 500, true));
 			dispatch(endLoading());
 		});
 };
@@ -61,7 +69,7 @@ export const fetchUserEmailTemplates = (user_id) => (dispatch) => {
 		params: { user_id: user_id },
 	})
 		.then((res) => {
-			const response = res.data.data;
+			const response = res.data.res.all_templates;
 			console.log(response);
 			const userTemplates = response.map((res, index) => {
 				// if(index.length){
@@ -69,7 +77,11 @@ export const fetchUserEmailTemplates = (user_id) => (dispatch) => {
 				// 		return { id: res.id, templateTitle: res.name, message: res.body };
 				// 	}
 				// }
-				return { id: res.id, templateTitle: res.name, message: res.body };
+				return {
+					id: res.id,
+					templateTitle: res.template_name,
+					message: res.body,
+				};
 			});
 
 			dispatch({
@@ -78,9 +90,8 @@ export const fetchUserEmailTemplates = (user_id) => (dispatch) => {
 			});
 		})
 		.catch((err) => {
-			dispatch(
-				setErrors(err.response.data.message[0], err.response.data.error, true)
-			);
+			console.log(err);
+			dispatch(setErrors("Something went wrong", "400", true));
 			dispatch(endLoading());
 		});
 };
@@ -114,36 +125,33 @@ export const deleteUserEmailTemplates = (user_id) => (dispatch) => {
 	// 	});
 };
 
-export const changeDefaultTemplate = (
-	user_id,
-	project_id,
-	default_template
-) => (dispatch) => {
-	axios({
-		url: "http://localhost:5000/templates",
-		method: "PATCH",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		data: JSON.stringify({
-			user_id: user_id,
-			project_id: project_id, //TODO tell tommy to remove proecjt ID from changing template default because this is not needed
-			default_template: default_template,
-		}),
-	})
-		.then((res) => {
-			const response = res.data.data;
-			console.log(response.default_template);
-			const newDefualtTemplate = response.default_template;
-			dispatch({
-				type: CHANGE_DEFAULT_EMAIL_TEMPLATE,
-				payload: newDefualtTemplate,
-			});
+export const changeDefaultTemplate =
+	(user_id, project_id, default_template) => (dispatch) => {
+		axios({
+			url: "http://localhost:5000/templates",
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			data: JSON.stringify({
+				user_id: user_id,
+				project_id: project_id, //TODO tell tommy to remove proecjt ID from changing template default because this is not needed
+				default_template: default_template,
+			}),
 		})
-		.catch((err) => {
-			console.log(err);
-		});
-};
+			.then((res) => {
+				const response = res.data.data;
+				console.log(response.default_template);
+				const newDefualtTemplate = response.default_template;
+				dispatch({
+					type: CHANGE_DEFAULT_EMAIL_TEMPLATE,
+					payload: newDefualtTemplate,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 /*********
  * FORUM *

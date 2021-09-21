@@ -1,0 +1,105 @@
+.textElement {
+	position: relative;
+	padding: 40px;
+	/* width: 100%; */
+	background-color: #f4eaea;
+	margin-bottom: 20px;
+}
+
+.textarea {
+	border: 1px solid grey;
+	min-width: 100%;
+	padding: 10px;
+	resize: none;
+	border-top: none;
+	height: 250px;
+}
+
+.textarea:focus {
+	outline: none;
+	border: 1px solid orange;
+	box-shadow: 0 0 3px orange;
+}
+
+.deleteBtn {
+	position: absolute;
+	bottom: 15px;
+	right: 10px;
+}
+
+.noteBtn {
+	font-style: normal;
+	margin: 0;
+	border-radius: 15px 15px 0px 0px;
+	margin-left: 1px;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+/* 
+overwriting some css using in react-tabs, to acheive the required style for setlife
+source can be found here
+https://github.com/reactjs/react-tabs/blob/main/style/react-tabs.css */
+.react-tabs {
+	-webkit-tap-highlight-color: transparent;
+}
+
+.react-tabs__tab-list {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+.react-tabs__tab {
+	display: inline-block;
+	/* border: 1px solid transparent; */
+	border: 1px solid #afaaad;
+	border-radius: 15px 15px 0px 0px;
+	font-family: "Proxima Nova", "Montserrat", sans-serif;
+	/* bottom: -1px; */
+	position: relative;
+	list-style: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	background-color: #eeeeee;
+}
+
+.react-tabs__tab--selected {
+	/* background: #fff; */
+	border-color: #aaa;
+	border-bottom: none;
+	color: black;
+	background-color: #f4eaea;
+	/* border-radius: 5px 5px 0 0; */
+}
+
+.react-tabs__tab--disabled {
+	color: GrayText;
+	cursor: default;
+}
+
+.react-tabs__tab:focus {
+	box-shadow: 0 0 3px orange;
+	outline: none;
+}
+
+.react-tabs__tab:focus:after {
+	content: "";
+	position: absolute;
+	height: 5px;
+	left: -4px;
+	right: -4px;
+	bottom: -5px;
+	background: #fff;
+}
+
+.react-tabs__tab-panel {
+	display: none;
+	margin-top: -1px;
+}
+
+.react-tabs__tab-panel--selected {
+	display: block;
+}

@@ -33,13 +33,13 @@ const userReducer = (state = initialUserState, action) => {
 				loading: false,
 			};
 
-		case CREATE_NEW_EMAIL_TEMPLATE:
-			let updatedTemplates = action.payload.templateData;
-			return {
-				...state,
-				emailTemplates: updatedTemplates,
-				loading: false,
-			};
+		// case CREATE_NEW_EMAIL_TEMPLATE:
+		// 	let updatedTemplates = action.payload.templateData;
+		// 	return {
+		// 		...state,
+		// 		emailTemplates: updatedTemplates,
+		// 		loading: false,
+		// 	};
 
 		case DELETE_USER_EMAIL_TEMPLATE:
 			return { ...state };

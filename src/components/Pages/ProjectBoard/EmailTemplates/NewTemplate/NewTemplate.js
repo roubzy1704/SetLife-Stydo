@@ -11,8 +11,8 @@ import Email from "../../../../../Shared/components/Email/Email";
 import "./NewTemplate.css";
 
 const NewTemplate = (props) => {
+	//TODO find a way to revive this page on reconnection attempts
 	//PROJECTID RETRIEVAL,AND SETUP USAGE FOR PAGENAV
-
 	const projectId = useParams().projectId; //retrieve projectId from url route
 	const allProjects = useSelector((state) => state.projects.project); //retireve allProjects from store
 	//find project in store that matches projectId
@@ -32,6 +32,8 @@ const NewTemplate = (props) => {
 	};
 
 	const dispatch = useDispatch();
+
+	console.log(error);
 
 	// let user_id = 1;
 	//USERID RETRIEVAL
@@ -54,11 +56,14 @@ const NewTemplate = (props) => {
 	const history = useHistory();
 
 	const handleContent = (data) => {
+		console.log("call", data);
 		dispatch(createNewEmailTemplate(user_id, data)); //dispatch newly created template
-		setTimeout(() => {
-			history.goBack(); //go back to emailTemplate
-		}, 1000);
+		// setTimeout(() => {
+		if (error.message !== "") history.goBack(); //go back to emailTemplate
+		// }, 1000);
 	};
+
+	console.log(userProject, user_id, projectId);
 
 	return (
 		<React.Fragment>
@@ -70,7 +75,8 @@ const NewTemplate = (props) => {
 			/>
 			{isLoading || userProject === undefined ? (
 				<div className="center drop">
-					<LoadingSpinner />
+					{/* if page is stuck here use goBack to recover */}
+					<LoadingSpinner goBack />
 				</div>
 			) : (
 				!isLoading &&

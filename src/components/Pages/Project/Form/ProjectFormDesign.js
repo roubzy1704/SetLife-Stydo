@@ -27,7 +27,7 @@ const ProjectFormDesign = (props) => {
 						<div className="row">
 							<div className="col-sm-1">
 								{/* only display back button for fileUpload page in new project form */}
-								{stepNumber === 1 && (
+								{stepNumber !== 0 && (
 									<label onClick={() => previous(formik.values)}>
 										{" "}
 										<span
@@ -79,19 +79,8 @@ const ProjectFormDesign = (props) => {
 									</div>
 									<div>
 										<div>
-											{stepNumber === 1 ? (
-												<React.Fragment>
-													<Button
-														type="submit"
-														// disabled={!(formik.isValid && formik.dirty)}
-													>
-														Continue
-													</Button>
-													<Button type="submit" onClick={next}>
-														Skip
-													</Button>
-												</React.Fragment>
-											) : (
+											{/* if form is on image upload step include skip button */}
+											{stepNumber !== 1 && (
 												<Button
 													//TODO RE-ENABLE DISABLED @roubzy1704
 													// disabled={!(formik.isValid && formik.dirty)}

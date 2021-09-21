@@ -11,6 +11,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 
 import Auth from "./components/Pages/Auth/Auth";
+import RegistrationForm from "./components/Pages/Auth/RegistrationForm/RegistrationForm";
 import Navbar from "./components/navbar/navbar";
 import DashboardHome from "./components/Pages/Dashboard/DashboardHome";
 import ProjectHome from "./components/Pages/Project/ProjectHome";
@@ -18,6 +19,7 @@ import NewProjectForm from "./components/Pages/Project/NewProjectForm";
 import ProjectBoard from "./components/Pages/ProjectBoard/ProjectBoard";
 import NotFound from "./components/Pages/NotFound";
 import projectReducer from "./Store/Reducers/ProjectReducer";
+import projectBoardReducer from "./Store/Reducers/projectBoardReducer";
 import userReducer from "./Store/Reducers/userReducer";
 import MoodBoard from "./components/Pages/ProjectBoard/moodBoard/MoodBoard";
 import Contacts from "./components/Pages/ProjectBoard/Contacts/Contacts";
@@ -37,10 +39,15 @@ import ForumHome from "./components/Pages/Forum/ForumHome";
 import NewForumPost from "./components/Pages/Forum/NewForumPost";
 import { errorsReducer } from "./Store/Reducers/ErrorReducer";
 
+import "./App.css";
+
+// FONTS
+
 //TODO import shared.css but first convert it to sass and resolve css conflicts
 
 const rootReducer = combineReducers({
 	projects: projectReducer,
+	projectBoard: projectBoardReducer,
 	error: errorsReducer,
 	user: userReducer,
 });
@@ -83,13 +90,16 @@ function App() {
 							<Route path="/" exact>
 								<Auth />
 							</Route>
+							<Route path="/registration" exact>
+								<RegistrationForm />
+							</Route>
 							<Route path="/dashboard" exact>
 								<DashboardHome />
 							</Route>
-							<Route path="/database" exact>
+							<Route path="/database/:user_id" exact>
 								<Database />
 							</Route>
-							<Route path="/database/:brandName" exact>
+							<Route path="/database/:user_id/:brandName" exact>
 								<BrandContacts />
 							</Route>
 							<Route path="/forum" exact>
@@ -113,16 +123,16 @@ function App() {
 							<Route path="/ProjectBoard/:projectId/contacts" exact>
 								<Contacts />
 							</Route>
-							<Route path="/ProjectBoard/:projectId/requests" exact>
+							<Route path="/ProjectBoard/:projectId/:user_id/requests" exact>
 								<Requests />
 							</Route>
 							<Route
-								path="/ProjectBoard/:projectId/requests/selectRequest"
+								path="/ProjectBoard/:projectId/:user_id/selectRequest"
 								exact>
 								<SelectRequest />
 							</Route>
 							<Route
-								path="/ProjectBoard/:projectId/requests/selectRequest/TagWalk"
+								path="/ProjectBoard/:projectId/requests/selectRequest/TagWalk/:selection"
 								exact>
 								<TagWalk />
 							</Route>

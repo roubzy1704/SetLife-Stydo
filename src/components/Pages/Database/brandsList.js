@@ -1,9 +1,16 @@
 import React from "react";
 
-const brandsList = ({ getSelection }) => {
+const brandsList = ({ getSelection, database }) => {
 	function handleClick(event) {
-		// console.log(event.target.id);
-		getSelection(event.target.id);
+		// console.log(event.target.attributes.getNamedItem('name').value);
+		if (database) {
+			//this is the way to get a custom attribute (name) from an event object (Label)
+			//https://stackoverflow.com/questions/20377837/how-to-access-custom-attributes-from-event-object-in-react
+			getSelection(event.target.attributes.getNamedItem('name').value)
+		}
+		else {
+			getSelection(event.target.id);
+		}
 	}
 	return (
 		<React.Fragment>
@@ -20,7 +27,8 @@ const brandsList = ({ getSelection }) => {
 						<label
 							className="brandLink"
 							onClick={handleClick}
-							id="3.1 Philips Lim">
+							id="3-1-Phillip-Lim"
+							name="3.1 Phillip Lim">
 							3.1 Phillip Lim
 						</label>
 						<hr />
@@ -33,7 +41,7 @@ const brandsList = ({ getSelection }) => {
 						<label
 							className="brandLink"
 							onClick={handleClick}
-							id="A|X Armani Exchange">
+							id="Armani-Exchange">
 							A|X Armani Exchange
 						</label>
 						<hr />
@@ -43,7 +51,11 @@ const brandsList = ({ getSelection }) => {
 						<hr />
 						<h4 id="list-item-2">B</h4>
 						<hr className="divider" />
-						<label className="brandLink" onClick={handleClick} id="Burberry">
+						<label
+							className="brandLink"
+							onClick={handleClick}
+							id="Burberry"
+							name="Burberry">
 							Burberry
 						</label>
 						<hr />
@@ -148,7 +160,8 @@ const brandsList = ({ getSelection }) => {
 						<label
 							className="brandLink"
 							onClick={handleClick}
-							id="Louis Vuitton">
+							id="Louis-Vuitton"
+							name="Louis Vuitton">
 							Louis Vuitton
 						</label>
 						<hr />

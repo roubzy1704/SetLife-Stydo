@@ -11,7 +11,6 @@ const Email = (props) => {
 	const textChange = (e) => {
 		setMessage(e.target.value);
 	};
-
 	const templateData = { name: "", body: "" };
 
 	const handleModalSubmit = (name) => {
@@ -75,13 +74,11 @@ const Email = (props) => {
 							id="emailMessage"
 							rows="10"
 							placeholder="Type Message here"
-							onChange={textChange}
-						></textarea>
+							onChange={textChange}></textarea>
 						<Button
 							type="submit"
 							className="saveBtn"
-							onClick={() => setShowModal(true)}
-						>
+							onClick={() => setShowModal(true)}>
 							Save
 						</Button>
 						<Modal
@@ -92,7 +89,7 @@ const Email = (props) => {
 							show={showModal}
 							input
 							buttonText="save"
-							onSubmit={handleModalSubmit}
+							onSubmit={handleModalSubmit} //!SOMETHING IS GOIGN WRONG HERE, I WILL CHECK ON THIS LATER
 						/>
 					</div>
 				</form>

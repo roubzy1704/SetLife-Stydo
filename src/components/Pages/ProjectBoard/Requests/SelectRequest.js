@@ -57,8 +57,9 @@ const SelectRequest = () => {
 						{ProjectBoardPageNav(
 							projectId,
 							userProject.projectName,
-							"Select Request",
-							userProject.productionDate
+							"Requests",
+							userProject.productionDate,
+							"Select Request"
 						)}
 						{/*  */}
 						{selection !== "" && (
@@ -66,7 +67,7 @@ const SelectRequest = () => {
 								<p>You have selected {selection}</p>
 								<Button
 									className="blue-button"
-									to={`/ProjectBoard/${projectId}/requests/selectRequest/TagWalk`}>
+									to={`/ProjectBoard/${projectId}/requests/selectRequest/TagWalk/${selection}`}>
 									View Collection on Tag Walk
 								</Button>
 								<br />

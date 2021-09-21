@@ -1,42 +1,57 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import callSheet from "../../../Images/callSheet.png";
+import trashCan from "../../../Images/trashCan.png";
 import "./FileDisplay.css";
 
 const FileDisplayEntry = (props) => {
-	// console.log(props);
+	if (props.callsheet) {
+		console.log("d");
+		console.log(props.fileName);
+	}
+	const startDownload = useRef(null);
 
 	const downloadFile = () => {
-		debugBase64(props.value);
+		startDownload.current.click();
 	};
 
-	/**
-	 * Display a base64 URL inside an iframe in another window.
-	 */
-	function debugBase64(base64URL) {
-		var win = window.open();
-		win.document.write(
-			'<iframe src="' +
-				base64URL +
-				'" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>'
-		);
-	}
-
+	//TODO CODE DELETE FILE BUTTON
+	//TODO Might add a preview button and seperate download button
 	return (
 		<React.Fragment>
-			<label
-				// href={props.value}
-				// download
-				className="hover"
-				color="transparent"
-				// target="_blank"
-				onClick={downloadFile}>
-				<img src={callSheet} alt="fileDisplay" />
-				<div>
-					{props.name}
-					{"Happy long giving.pfdf"}
-				</div>
-			</label>
+			<div
+				style={{
+					display: "inline-block",
+					margin: "0 auto",
+					textAlign: "center",
+				}}>
+				<label
+					className="hover fileItem"
+					color="transparent"
+					onClick={downloadFile}>
+					<img src={callSheet} alt="fileDisplay" />
+					<div>{props.fileName}</div>
+				</label>
+				{/* <img
+					src={trashCan}
+					alt="delete"
+					className="fileDelete"
+					style={{
+						width: "15px",
+						paddingTop: "20px",
+						opacity: "0.2",
+						margin: "0 auto",
+					}}
+				/> */}
+			</div>
+
+			<a
+				style={{ display: "none" }}
+				download={props.fileName}
+				href={props.file}
+				ref={startDownload}>
+				download it
+			</a>
 		</React.Fragment>
 	);
 };

@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { createNewProject } from "../../../Store/Action/projectAction";
-import FileUpload from "../../../Shared/components/FileUpload/FileUpload";
+// import FileUpload from "../../../Shared/components/FileUpload/FileUpload";
+import FileUploadRebuild from "../../../Shared/components/FileUploadRebuild/FileUploadRebuild";
 import FormControlHook from "../../../Shared/hooks/FormControlHook";
 import TextInput from "../../../Shared/UIElements/input/TextInput";
 import ErrorModal from "../../../Shared/UIElements/ErrorModal/ErrorModal";
@@ -64,56 +65,68 @@ const NewProjectForm = () => {
 	};
 
 	//arrays that will and base64 array, imageNames and projectData for submission
-	const [fileNames, setFileNames] = useState([]);
-	const [imageBase64, setImageBase64] = useState([]);
-	const [projectData, setProjectData] = useState({});
+	// const [fileNames, setFileNames] = useState([]);
+	// const [imageBase64, setImageBase64] = useState([]);
+	// const [projectData, setProjectData] = useState({});
 
-	useEffect(() => {
-		if (fileNames.length) {
-			if (imageBase64.length === fileNames.length) {
-				dispatch(
-					createNewProject(projectData, imageBase64, fileNames, user_id)
-				);
-				history.push("/projectHome");
-			}
-		}
-	}, [dispatch, imageBase64, fileNames]);
+	const [imagesToUpload, setImagesToUpload] = useState([]);
+	const [imagesNameToUpload, setImagesNameToUpload] = useState([]);
+
+	// useEffect(() => {
+	// 	if (fileNames.length) {
+	// 		if (imageBase64.length === fileNames.length) {
+	// 			dispatch(
+	// 				createNewProject(projectData, imageBase64, fileNames, user_id)
+	// 			);
+	// 			history.push("/projectHome");
+	// 		}
+	// 	}
+	// }, [dispatch, imageBase64, fileNames]);
 
 	const handleSubmit = (values) => {
+		// console.log(imagesToUpload, imagesNameToUpload);
 		//so the object here is to first compress the images and then convert to base64 while saving the image names
-		setProjectData(values);
+		// setProjectData(values);
 		//arrays that will hold file names
 
 		//I need to grab the last array in the array save that array in imageFIles and the image names in imageNames
 		//first check if a file exist
-		if (fileSave.current.length) {
-			//then map thru array of last element in array and save it in imageFiles array
-			fileSave.current[fileSave.current.length - 1].forEach((image) => {
-				//and save image names to fileNames array
-				setFileNames((prevState) => [...prevState, image.name]);
-				//next compress Images, and convert to base64 (ceoversion will be called from handleImageCompression function)
-				getBase64(image);
-			});
-		}
+		// if (fileSave.current.length) {
+		// 	//then map thru array of last element in array and save it in imageFiles array
+		// 	fileSave.current[fileSave.current.length - 1].forEach((image) => {
+		// 		//and save image names to fileNames array
+		// 		setFileNames((prevState) => [...prevState, image.name]);
+		// 		//next compress Images, and convert to base64 (ceoversion will be called from handleImageCompression function)
+		// 		getBase64(image);
+		// 	});
+		// }
 		//no image to upload, dispatch as usual
-		else {
-			dispatch(createNewProject(values, [], [], user_id));
-			history.push("/projectHome");
-		}
+		// else {
+		dispatch(
+			createNewProject(values, imagesToUpload, imagesNameToUpload, user_id)
+		);
+		history.push("/projectHome");
+		// }
 	};
 
-	function getBase64(file) {
-		var reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = function () {
-			//push results to fileBase64 array
-			setImageBase64((prevState) => [...prevState, reader.result]);
-		};
-		reader.onerror = function (error) {
-			//?maybe throw an error
-			console.log(error);
-		};
-	}
+	const filesToUpload = (filesInB64, file_Names) => {
+		console.log(filesInB64, file_Names);
+		setImagesToUpload(filesInB64);
+		setImagesNameToUpload(file_Names);
+	};
+
+	// function getBase64(file) {
+	// 	var reader = new FileReader();
+	// 	reader.readAsDataURL(file);
+	// 	reader.onload = function () {
+	// 		//push results to fileBase64 array
+	// 		setImageBase64((prevState) => [...prevState, reader.result]);
+	// 	};
+	// 	reader.onerror = function (error) {
+	// 		//?maybe throw an error
+	// 		console.log(error);
+	// 	};
+	// }
 
 	return (
 		<React.Fragment>
@@ -139,6 +152,7 @@ const NewProjectForm = () => {
 						}}
 						//final onSubmit method for form submission
 						onSubmit={(values) => {
+							console.log("formik");
 							handleSubmit(values);
 						}}
 						//formType to render in FormCOntrolHook component
@@ -200,7 +214,8 @@ const NewProjectForm = () => {
 						{/* page 2 of new Project */}
 						<WizardStep>
 							<React.Fragment>
-								<FileUpload allFiles={allFiles} />
+								{/* <FileUpload allFiles={allFiles} /> */}
+								<FileUploadRebuild uploadFiles={filesToUpload} skipBtn />
 							</React.Fragment>
 						</WizardStep>
 						{/* page 3 of new Project */}
@@ -216,7 +231,7 @@ const NewProjectForm = () => {
 								</div>
 								<div className="text-left pl-5 pb-5 col">
 									<div className="row pb-3 pt-3">
-										{boardCheck.current ? (
+										{imagesToUpload.length ? (
 											<span
 												className="iconify icon"
 												data-icon="ant-design:check-outlined"

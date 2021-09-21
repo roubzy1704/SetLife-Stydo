@@ -1,26 +1,20 @@
 .wrapper {
 	position: relative;
-	width: 90vw;
-	height: 90vh;
-	/* border: 1px solid black; */
-	padding-top: 10%;
+	/* height: 90vh; */
+	padding-top: 1%;
 }
 
 .blue-box {
 	position: relative;
 	background-color: #84cee5;
 	width: 90%;
-	height: 80%;
-	/* height: 70vh; */
-	/* margin: 0 auto; */
-
-	/* width: auto; */
+	height: 70vh;
 }
 
 .auth-form {
 	position: absolute;
 	background-color: #f4eaea;
-	width: 40%;
+	width: 60%;
 	height: 120%;
 	/* top: -10%; */
 	bottom: -10%;
@@ -30,4 +24,46 @@
 	right: 0;
 	text-align: center;
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.loginForm {
+	padding-top: 10%;
+}
+
+.rememberForgot {
+	padding-top: 10px;
+	padding-bottom: 30px;
+	display: flex;
+}
+
+.rememberMe {
+	text-align: start;
+}
+
+.rememberMeText:hover {
+	cursor: pointer;
+}
+.forgotPW {
+	text-align: end;
+}
+
+.forgotPWText:hover {
+	cursor: pointer;
+}
+
+/* REQUEST FORM */
+.dropdown-toggle {
+	width: 100%;
+}
+
+.dropdown-menu.show {
+	width: 100%;
+}
+
+.occupation {
+	text-align: center;
+}
+
+.submission {
+	padding-top: 50%;
 }

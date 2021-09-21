@@ -19,6 +19,7 @@ import pullInventory from "../../../Images/pullInventory.png";
 import Archive from "../../../Images/archive.png";
 import "./ProjectBoard.css";
 import "../../../Shared/UIElements/Shared.css";
+import { fetchProjectBoard } from "../../../Store/Action/projectBoardAction";
 
 const ProjectBoard = (props) => {
 	const projectId = useParams().projectId;
@@ -42,6 +43,7 @@ const ProjectBoard = (props) => {
 	//is absent, the page will crash, my goal was to figure out a way to preserve data on page refresh.
 	useEffect(() => {
 		dispatch(fetchAllProjects(user_id));
+		// dispatch(fetchProjectBoard) //? DO I HAVE TO ADD THIS?
 	}, [dispatch, user_id]);
 
 	return (
@@ -99,7 +101,8 @@ const ProjectBoard = (props) => {
 										</div>
 									</div>
 								</Button>
-								<Button to={`/ProjectBoard/${userProject.projectId}/requests`}>
+								<Button
+									to={`/ProjectBoard/${userProject.projectId}/${user_id}/requests`}>
 									<div className="row boardEntry">
 										<div className="col-sm-2 icon">
 											<img src={requests} alt="hangar"></img>
